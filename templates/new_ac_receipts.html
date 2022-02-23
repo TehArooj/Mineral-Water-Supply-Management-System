@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipts</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{url_for('static',filename='fontawesome-free/css/all.min.css')}}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet"
+        href="{{ url_for('static',filename='tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+    <!-- iCheck -->
+    <link rel="stylesheet" href=" {{ url_for('static',filename='icheck-bootstrap/icheck-bootstrap.min.css') }}">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='jqvmap/jqvmap.min.css') }}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/adminlte.min.css') }}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='daterangepicker/daterangepicker.css') }}">
+    <!-- summernote -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='summernote/summernote-bs4.css') }}">
+    <!-- sweet Alert -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='sweetalert2/sweetalert2.min.css') }}">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700">
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='datatables-bs4/css/dataTables.bootstrap4.css') }}">
+
+
+</head>
+
+<body class="sidebar-mini layout-fixed control-sidebar-open" style="height: auto;"
+    onload="displayReceipts(); setChargeCodeOptionsforReceipt(); displayCustomersOptions();">
+    <div class="wrapper">
+
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-dark navbar-info">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+                </li>
+            </ul>
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <!-- Messages Dropdown Menu -->
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-toggle="modal" data-target="#modal-primary">
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar elevation-4 sidebar-light-info">
+            <!-- Brand Logo -->
+            <a href="#" class="brand-link navbar-info">
+                <img src="{{ url_for('static', filename='images/logo.png')}}" alt="Logo"
+                    class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light text-white">Mineral Water MS</span>
+            </a>
+
+            <!-- Sidebar -->
+            <div
+                class="sidebar os-host os-theme-light os-host-overflow os-host-overflow-y os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-transition">
+                <div class="os-resize-observer-host">
+                    <div class="os-resize-observer observed" style="left: 0px; right: auto;"></div>
+                </div>
+                <div class="os-size-auto-observer" style="height: calc(100% + 1px); float: left;">
+                    <div class="os-resize-observer observed"></div>
+                </div>
+                <div class="os-content-glue" style="margin: 0px -8px;"></div>
+                <div class="os-padding">
+                    <div class="os-viewport os-viewport-native-scrollbars-invisible"
+                        style="overflow-y: scroll; right: 0px; bottom: 0px;">
+                        <div class="os-content" style="padding: 0px 8px; height: 100%; width: 100%;">
+                            <!-- Sidebar user panel (optional) -->
+                            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                                <div class="image">
+                                    <img src="{{ url_for('static',filename='images/avatar5.png') }}"
+                                        class="img-circle elevation-2" alt="User Image">
+                                </div>
+                                <div class="info">
+                                    <a href="#" class="d-block">Admin
+                                        <span class="float-right badge bg-success ml-4 mt-1">Online</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Sidebar Menu -->
+                            <nav class="mt-2">
+                                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                                    data-accordion="false">
+                                    <!-- Add icons to the links using the .nav-icon class
+             with font-awesome or any other icon font library -->
+                                    <li class="nav-item has-treeview menu-open  pb-3">
+                                        <a href="/Dashboard" class="nav-link active">
+                                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                                            <p>
+                                                Dashboard
+                                            </p>
+                                        </a>
+                                    </li>
+
+
+                                    <li class="nav-item has-treeview menu-open">
+                                        <a href="#" class="nav-link">
+                                            <i class="nav-icon fas fa-users"></i>
+                                            <p>
+                                                MANAGEMENT
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+                                        </a>
+                                        <ul class="nav nav-treeview">
+                                            <li class="nav-item">
+                                                <a href="/Customer" class="nav-link">
+                                                    <i class="nav-icon fas fa-window-maximize"></i>
+                                                    <p>
+                                                        Customers
+                                                    </p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="/order" class="nav-link">
+                                                    <i class="nav-icon fas fa-window-maximize"></i>
+                                                    <p>
+                                                        Orders
+                                                    </p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="/new_orders" class="nav-link">
+                                                    <i class="nav-icon fas fa-list-alt"></i>
+                                                    <p>
+                                                        New Orders
+                                                    </p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item ">
+                                                <a href="/delivered_orders" class="nav-link">
+                                                    <i class="nav-icon fas fa-list-alt"></i>
+                                                    <p>
+                                                        Delivered Orders
+                                                    </p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item user-panel">
+                                                <a href="/cancelled_orders" class="nav-link">
+                                                    <i class="nav-icon fas fa-list-alt"></i>
+                                                    <p>
+                                                        Cancelled Orders
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="nav-item has-treeview menu-open">
+                                        <a href="#" class="nav-link">
+                                            <i class="nav-icon fas fa-dollar-sign"></i>
+                                            <p>
+                                                ACCOUNTING
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+                                        </a>
+                                        <ul class="nav nav-treeview">
+                                            <li class="nav-item">
+                                                <a href="/ac_bills" class="nav-link">
+                                                    <i class="nav-icon fas fa-window-maximize"></i>
+                                                    <p>
+                                                        Bills
+                                                    </p>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a href="/ac_receipts" class="nav-link">
+                                                    <i class="nav-icon fas fa-window-maximize"></i>
+                                                    <p>
+                                                        Receipts
+                                                    </p>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a href="/ac_payments" class="nav-link">
+                                                    <i class="nav-icon fas fa-window-maximize"></i>
+                                                    <p>
+                                                        Payments
+                                                    </p>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a href="/rpt_Receive_Stock" class="nav-link">
+                                                    <i class="nav-icon fas fa-window-maximize"></i>
+                                                    <p>
+                                                        Stock In
+                                                    </p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="/stockOnHand" class="nav-link">
+                                                    <i class="nav-icon fas fa-list-alt"></i>
+                                                    <p>
+                                                        Stock On Hand
+                                                    </p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="/rpt_salesSummary" class="nav-link">
+                                                    <i class="nav-icon fas fa-list-alt"></i>
+                                                    <p>
+                                                        Sales Summary
+                                                    </p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item ">
+                                                <a href="/rpt_receiptsSummary" class="nav-link">
+                                                    <i class="nav-icon fas fa-list-alt"></i>
+                                                    <p>
+                                                        Receipts Summary
+                                                    </p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item ">
+                                                <a href="/rpt_paymentSummary" class="nav-link">
+                                                    <i class="nav-icon fas fa-list-alt"></i>
+                                                    <p>
+                                                        Payment Summary
+                                                    </p>
+                                                </a>
+                                            </li>
+
+
+                                        </ul>
+                                    </li>
+
+                                    <li class="nav-item has-treeview menu-open">
+                                        <a href="#" class="nav-link">
+                                            <i class="nav-icon fas fa-lock-open"></i>
+                                            <p>
+                                                ADMINISTRATION
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+                                        </a>
+                                        <ul class="nav nav-treeview">
+
+                                            <li class="nav-item">
+                                                <a href="/product" class="nav-link">
+                                                    <i class="fab fa-buromobelexperte nav-icon"></i>
+                                                    <p>
+                                                        Product
+                                                    </p>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a href="/am_Size" class="nav-link">
+                                                    <i class="fab fa-buromobelexperte nav-icon"></i>
+                                                    <p>
+                                                        Size
+                                                    </p>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a href="/am_chargeCodes" class="nav-link">
+                                                    <i class="fab fa-buromobelexperte nav-icon"></i>
+                                                    <p>
+                                                        Charge Codes
+                                                    </p>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a href="/am_users" class="nav-link">
+                                                    <i class="fas fa-user-cog nav-icon"></i>
+                                                    <p>
+                                                        Users
+                                                    </p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item ">
+                                                <a href="/am_roles" class="nav-link">
+                                                    <i class="nav-icon fas fa-tags"></i>
+                                                    <p>
+                                                        Roles
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="nav-item has-treeview ">
+                                        <a href="/logout" class="nav-link">
+                                            <i class="nav-icon fas fa-sign-out-alt"></i>
+                                            <p>
+                                                LOGOUT
+                                            </p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <!-- /.sidebar-menu -->
+                        </div>
+                    </div>
+                </div>
+                <div class="os-scrollbar os-scrollbar-horizontal os-scrollbar-unusable os-scrollbar-auto-hidden">
+                    <div class="os-scrollbar-track">
+                        <div class="os-scrollbar-handle" style="width: 100%; transform: translate(0px, 0px);"></div>
+                    </div>
+                </div>
+                <div class="os-scrollbar os-scrollbar-vertical os-scrollbar-auto-hidden">
+                    <div class="os-scrollbar-track">
+                        <div class="os-scrollbar-handle" style="height: 73.8117%; transform: translate(0px, 0px);">
+                        </div>
+                    </div>
+                </div>
+                <div class="os-scrollbar-corner"></div>
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper" style="min-height: 725px;">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0 text-dark">Receipts</h1>
+                        </div><!-- /.col -->
+
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <!-- Main content -->
+            <section class="content">
+                <div class="row">
+                    <div class="col-12">
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <div class="input-group">
+                                        <input id="docDate" type="date" class="form-control">
+
+                                        <select id="customer-select" class="custom-select" name=""
+                                            onchange="getCustomerOption();">
+                                            <option>Customer</option>
+
+                                        </select>
+                                        <select id="my-select2" class="custom-select" name=""
+                                            onchange="getChargeCodeOptions();">
+                                            <option>Charge Code</option>
+
+                                        </select>
+                                        <input id="amount" type="text" class="form-control" placeholder="Amount">
+
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-info btn-flat"
+                                                onclick="addReceipt();">Add</button>
+                                        </span>
+                                    </div>
+                                </h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="example1" class="table table-bordered table-striped ">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Customer</th>
+                                                <th>Date</th>
+                                                <th>Charge Code</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
+            Semester Project - <a href="https://pucit.edu.pk/" target="_blank">PUCIT</a>.
+        </footer>
+
+        <!-- ./wrapper -->
+        <div class="modal fade" id="modal-primary">
+            <div class="modal-dialog">
+                <div class="modal-content bg-primary">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Session</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to Logout?</p>
+                    </div>
+                    <div class="modal-footer justify-content-right">
+                        <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+                        <a href="/logout" class="btn btn-outline-light">OK</a>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+
+        <script>
+            function displayReceipts() {
+                alert("Displayng Table");
+                let xhttp = new XMLHttpRequest();
+                xhttp.open("GET", '/getReceipts');
+                xhttp.send();
+                alert("Request sent");
+                xhttp.onreadystatechange = function () {
+                    if (xhttp.readyState == 4 && xhttp.status == 200) {
+                        alert(" in ready state ");
+                        console.log("if me");
+                        var response1 = xhttp.responseText;
+                        console.log(response1);
+                        var data1 = JSON.parse(response1);
+                        console.log(data1);
+                        let count = data1[1];
+                        var tbodyRef = document.getElementById('example1').getElementsByTagName('tbody')[0];
+                        tbodyRef.innerHTML = " ";
+                        for (var i = 0; i < count; i++) {
+                            var newRow = tbodyRef.insertRow();
+                            var newCell = newRow.insertCell();
+                            var newText = document.createTextNode(data1[0][i]['receipt_id']);
+                            newCell.appendChild(newText);
+                            var newCell = newRow.insertCell();
+                            var newText = document.createTextNode(data1[0][i]['customer_name']);
+                            newCell.appendChild(newText);
+                            var newCell = newRow.insertCell();
+                            var newText = document.createTextNode(data1[0][i]['receipt_date']);
+                            newCell.appendChild(newText);
+                            var newCell = newRow.insertCell();
+                            var newText = document.createTextNode(data1[0][i]['charge_id']);
+                            newCell.appendChild(newText);
+                            var newCell = newRow.insertCell();
+                            var newText = document.createTextNode(data1[0][i]['amount']);
+                            newCell.appendChild(newText);
+
+                        }
+                        resetForm();
+                    }
+                }
+            }
+
+            function displayCustomersOptions() {
+                document.getElementById('customer-select').innerHTML = "";
+                var select_id = document.getElementById('customer-select');
+                myOption = document.createElement("option");
+                myOption.text = "Choose customer";
+                myOption.value = " ";
+                select_id.appendChild(myOption);
+
+                let xhttp = new XMLHttpRequest();
+                console.log("inside display customer option func in js ");
+                xhttp.open("POST", '/displayCustomersOptions', true);
+                xhttp.send();
+                xhttp.onreadystatechange = function () {
+                    if (xhttp.readyState == 4 && xhttp.status == 200) {
+                        var response1 = xhttp.responseText;
+                        console.log("option we got for cust-name are:");
+                        console.log(response1);
+                        var data1 = JSON.parse(response1);
+                        let count = data1[1];
+
+                        for (var i = 0; i < count; i++) {
+                            var opt = document.createElement('option');
+                            opt.appendChild(document.createTextNode(data1[0][i]['name']));
+                            opt.value = data1[0][i]['name'];
+                            console.log("testtttinggg");
+                            select_id.appendChild(opt);
+                        }
+
+                    }
+                }
+            }
+
+            /*
+            function setOrderNooptions() {
+                document.getElementById('my-select1').innerHTML = ""
+                var s_id = document.getElementById('my-select1')
+                myOption = document.createElement("option");
+                myOption.text = "Order No.";
+                myOption.value = " ";
+                s_id.appendChild(myOption);
+                let xhttp = new XMLHttpRequest();
+                xhttp.open("POST", '/setOrderNooptions', true);
+                xhttp.send();
+                xhttp.onreadystatechange = function () {
+                    if (xhttp.readyState == 4 && xhttp.status == 200) {
+                        var response1 = xhttp.responseText;
+                        var data1 = JSON.parse(response1)
+                        let count = data1[1];
+                        for (var i = 0; i < count; i++) {
+                            myOption = document.createElement("option");
+                            myOption.text = data1[0][i]['order_id'];
+                            myOption.value = data1[0][i]['order_id'];
+                            s_id.appendChild(myOption);
+                        }
+
+                    }
+                }
+            }
+            */
+
+            function getCustomerOption() {
+                let selected_customer = document.getElementById('customer-select').value;
+            }
+
+            function setChargeCodeOptionsforReceipt() {
+                document.getElementById('my-select2').innerHTML = "";
+                var s_id = document.getElementById('my-select2');
+                myOption = document.createElement("option");
+                myOption.text = "Charge Code";
+                myOption.value = " ";
+                s_id.appendChild(myOption);
+                let xhttp = new XMLHttpRequest();
+                xhttp.open("POST", '/setChargeCodeOptionsforReceipt', true);
+                xhttp.send();
+                xhttp.onreadystatechange = function () {
+                    if (xhttp.readyState == 4 && xhttp.status == 200) {
+                        var response1 = xhttp.responseText;
+                        var data1 = JSON.parse(response1);
+                        let count = data1[1];
+                        for (var i = 0; i < count; i++) {
+                            myOption = document.createElement("option");
+                            myOption.text = data1[0][i]['description'];
+                            myOption.value = data1[0][i]['description'];
+                            s_id.appendChild(myOption);
+                        }
+                    }
+                }
+            }
+
+            function getChargeCodeOptions() {
+                let selected_CC = document.getElementById('my-select2');
+                selected_CC = document.getElementById('my-select2').value;
+            }
+
+            function addReceipt() {
+                var date = document.getElementById('docDate').value;
+                var cust_name = document.getElementById('customer-select').value;
+                var charge_code = document.getElementById('my-select2').value;
+                var amount = document.getElementById('amount').value;
+                let Receipt_Details = {
+                    Date: date,
+                    Customer: cust_name,
+                    ChargeCode: charge_code,
+                    Amount: amount
+                }
+                let xhttp = new XMLHttpRequest();
+                xhttp.open("POST", '/addReceipt', true);
+                xhttp.send(JSON.stringify(Receipt_Details));
+                xhttp.onreadystatechange = function () {
+                    if (xhttp.readyState == 4 && xhttp.status == 200) {
+                        var response = xhttp.responseText;
+                        var data = JSON.parse(response);
+
+                        if (data == true) {
+                            Swal.fire({
+                                position: 'top-end',
+                                type: ("success"),
+                                text: "Record has been successfully Added.",
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(function () {
+                                displayReceipts();
+                            });
+
+                        }
+                        else {
+                            console.log('waiting for response');
+                            Swal.fire({
+                                position: 'top-end',
+                                type: ("error"),
+                                text: "Record cannot be Added.",
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(function () {
+                                return;
+                            });
+                        }
+                    }
+                    else {
+                        console.log('waiting for response2');
+                        Swal.fire({
+                            position: 'top-end',
+                            type: ("error"),
+                            text: "Record cannot be Added.",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(function () {
+                            return;
+                        });
+                    }
+
+                }
+            }
+
+            function receipt_Set_order_AMOUNT() {
+                let orderNo = document.getElementById("my-select1").value;
+                console.log("orderno i got is: ");
+                console.log(orderNo);
+                let xhttp = new XMLHttpRequest();
+                xhttp.open("POST", '/receipt_Set_order_AMOUNT', true);
+                xhttp.send(JSON.stringify(orderNo));
+                xhttp.onreadystatechange = function () {
+                    if (xhttp.readyState == 4 && xhttp.status == 200) {
+                        var response1 = xhttp.responseText;
+                        console.log("response in receipt_Set_order_AMOUNT ");
+                        console.log(response1);
+                        var data = JSON.parse(response1);
+                        document.getElementById("amount").value = data["amount"];
+                    }
+                }
+            }
+            function resetForm() {
+                document.getElementById('docDate').value = '';
+                document.getElementById('my-select1').value = '';
+                document.getElementById('my-select2').value = '';
+                document.getElementById('amount').value = '';
+            }
+        </script>
+
+        <script src="{{url_for('static',filename='jquery/jquery.min.js')}}"></script>
+        <!-- jQuery UI 1.11.4 -->
+        <script src="{{url_for('static',filename='jquery-ui/jquery-ui.min.js')}}"></script>
+        <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+        <script>
+            $.widget.bridge('uibutton', $.ui.button)
+        </script>
+        <!-- Bootstrap 4 -->
+        <script src="{{url_for('static',filename='bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+        <!-- ChartJS -->
+        <script src="{{url_for('static',filename='chart.js/Chart.min.js')}}"></script>
+        <!-- Sparkline -->
+        <script src="{{url_for('static',filename='sparklines/sparkline.js')}}"></script>
+        <!-- JQVMap -->
+        <script src="{{url_for('static',filename='jqvmap/jquery.vmap.min.js')}}"></script>
+        <script src="{{url_for('static',filename='jqvmap/maps/jquery.vmap.world.js')}}"></script>
+        <!-- jQuery Knob Chart -->
+        <script src="{{url_for('static',filename='jquery-knob/jquery.knob.min.js')}}"></script>
+        <!-- daterangepicker -->
+        <script src="{{url_for('static',filename='moment/moment.min.js')}}"></script>
+        <script src="{{url_for('static',filename='daterangepicker/daterangepicker.js')}}"></script>
+        <!-- Tempusdominus Bootstrap 4 -->
+        <script
+            src="{{url_for('static',filename='tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+        <!-- Summernote -->
+        <script src="{{url_for('static',filename='summernote/summernote-bs4.min.js')}}"></script>
+        <!-- overlayScrollbars -->
+        <script src="{{url_for('static',filename='overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
+        <!-- AdminLTE App -->
+        <script src="{{url_for('static',filename='js/adminlte.js')}}"></script>
+        <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+        <script src="{{url_for('static',filename='js/pages/dashboard.js')}}"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="{{url_for('static',filename='js/demo.js')}}"></script>
+        <!-- sweet Alert -->
+        <script src="{{url_for('static',filename='sweetalert2/sweetalert2.min.js')}}"></script>
+
+        <!-- Bootstrap 4 -->
+        <!-- Select2 -->
+        <script src="{{url_for('static',filename='select2/js/select2.full.min.js')}}"></script>
+        <!-- Bootstrap4 Duallistbox -->
+        <script src="{{url_for('static',filename='inputmask/jquery.inputmask.bundle.js')}}"></script>
+        <script src="{{url_for('static',filename='bootstrap-colorpicker/js/bootstrap-colorpicker.min.js')}}"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="{{url_for('static',filename='datatables/jquery.dataTables.js')}}"></script>
+        <script src="{{url_for('static',filename='datatables-bs4/js/dataTables.bootstrap4.js')}}"></script>
+        <!-- page script -->
+
+        <script>
+            $(function () {
+                $('#example1').DataTable({
+                    "paging": true,
+                    "lengthChange": true,
+                    "searching": true,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": false,
+                });
+
+            });
+        </script>
+
+
+        <script>
+            $(function () {
+                //Initialize Select2 Elements
+                $('.select2').select2({
+                    theme: 'bootstrap4'
+                })
+
+                //Datemask dd/mm/yyyy
+                $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+                //Datemask2 mm/dd/yyyy
+                $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+                //Money Euro
+                $('[data-mask]').inputmask()
+
+                //Date range picker
+                $('#reservation').daterangepicker()
+                //Date range picker with time picker
+                $('#reservationtime').daterangepicker({
+                    timePicker: true,
+                    timePickerIncrement: 30,
+                    locale: {
+                        format: 'MM/DD/YYYY hh:mm A'
+                    }
+                })
+                //Date range as a button
+                $('#daterange-btn').daterangepicker(
+                    {
+                        ranges: {
+                            'Today': [moment(), moment()],
+                            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                            'This Month': [moment().startOf('month'), moment().endOf('month')],
+                            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                        },
+                        startDate: moment().subtract(29, 'days'),
+                        endDate: moment()
+                    },
+                    function (start, end) {
+                        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+                    }
+                )
+
+                //Timepicker
+                $('#timepicker').datetimepicker({
+                    format: 'LT'
+                })
+
+                //Bootstrap Duallistbox
+                $('.duallistbox').bootstrapDualListbox()
+
+                //Colorpicker
+                $('.my-colorpicker1').colorpicker()
+                //color picker with addon
+                $('.my-colorpicker2').colorpicker()
+
+                $('.my-colorpicker2').on('colorpickerChange', function (event) {
+                    $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
+                });
+            })
+        </script>
+
+        <script>
+            var acdonutChartCanvas = $('#donutChart').get(0).getContext('2d')
+            var donutData = {
+                labels: [
+                    'Completed',
+                    'Assigned',
+
+                ],
+                datasets: [
+                    {
+                        data: [10, 5],
+                        backgroundColor: ['#f56954', '#00a65a'],
+                    }
+                ]
+            }
+            var donutOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+            }
+            //Create pie or douhnut chart
+            // You can switch between pie and douhnut using the method below.
+            var donutChart = new Chart(acdonutChartCanvas, {
+                type: 'doughnut',
+                data: donutData,
+                options: donutOptions
+            })
+
+
+        </script>
+
+        <script>
+            var ocdonutChartCanvas = $('#ocdonutChart').get(0).getContext('2d')
+            var donutData = {
+                labels: [
+                    'Open',
+                    'Closed',
+                ],
+                datasets: [
+                    {
+                        data: [5, 10],
+                        backgroundColor: ['#C7D0E0', '#4A7AB2'],
+                    }
+                ]
+            }
+            var donutOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+            }
+            //Create pie or douhnut chart
+            // You can switch between pie and douhnut using the method below.
+            var donutChart = new Chart(ocdonutChartCanvas, {
+                type: 'doughnut',
+                data: donutData,
+                options: donutOptions
+            })
+
+        </script>
+    </div>
+</body>
+
+</html>

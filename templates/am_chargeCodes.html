@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charge Codes</title>
+
+    {% include "styles.html" %}
+
+</head>
+
+<body class="sidebar-mini layout-fixed control-sidebar-open" style="height: auto;" onload="displayTable();">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    {% include "navbar.html" %}
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar elevation-4 sidebar-light-info">
+        <!-- Brand Logo -->
+        <a href="#" class="brand-link navbar-info">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo"
+                 class="brand-image img-circle elevation-3" style="opacity: .8">
+            <span class="brand-text font-weight-light text-white">Mineral Water MS</span>
+        </a>
+
+        <!-- Sidebar -->
+        {% include "sidebar.html" %}
+        <!-- /.sidebar -->
+
+    </aside>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" style="min-height: 725px;">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0 text-dark">Charge Codes</h1>
+                    </div><!-- /.col -->
+
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-12">
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <div class="input-group">
+
+                                    <input type="text" class="form-control" placeholder="Description"
+                                           id="description">
+
+                                    <div class="icheck-primary d-inline ml-2 mr-2">
+                                        <input type="checkbox" id="checkboxPrimary1" checked>
+                                        <label for="checkboxPrimary1">
+                                            Active
+                                        </label>
+                                    </div>
+
+                                    <div class="icheck-primary d-inline ml-2">
+                                        <input type="checkbox" id="checkboxPrimary2">
+                                        <label for="checkboxPrimary2">
+                                            Billing
+                                        </label>
+                                    </div>
+                                    <div class="icheck-primary d-inline ml-2">
+                                        <input type="checkbox" id="checkboxPrimary3">
+                                        <label for="checkboxPrimary3">
+                                            Payment
+                                        </label>
+                                    </div>
+                                    <div class="icheck-primary d-inline ml-2">
+                                        <input type="checkbox" id="checkboxPrimary4">
+                                        <label for="checkboxPrimary4">
+                                            Receipt &nbsp;&nbsp;
+                                        </label>
+                                    </div>
+
+                                    <span class="input-group-append ml-2" id="Addbtn">
+                                            <button type="button" class="btn btn-info btn-flat"
+                                                    onclick="AddChargeCode();">Add</button>
+                                        </span>
+                                    <span class="input-group-append" id="Updatebtn" style="display: none;">
+                                            <button type="button" class="btn btn-info btn-flat"
+                                                    id="updatebutton">Update</button>
+                                        </span>
+                                </div>
+                            </h3>
+                        </div>
+
+
+                        </h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="example1" class="table table-bordered table-striped ">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Description</th>
+                                    <th>Active</th>
+                                    <th>Billing</th>
+                                    <th>Payment</th>
+                                    <th>Receipt</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                                <tfoot>
+                                <tr>
+
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </section>
+    </div>
+
+    <!-- /.content -->
+
+    <!-- /.content-wrapper -->
+    <!-- Footer -->
+    {% include "footer.html" %}
+</div>
+<!-- Logout Dialog -->
+{% include "modal_logout.html" %}
+
+
+<script>
+    function displayTable() {
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("GET", '/getChargeCode');
+        xhttp.send()
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response1 = xhttp.responseText;
+                var data1 = JSON.parse(response1);
+
+                console.log(data1);
+                let count = data1[1];
+                var tbodyRef = document.getElementById('example1').getElementsByTagName('tbody')[0];
+                tbodyRef.innerHTML = " ";
+                for (var i = 0; i < count; i++) {
+                    var newRow = tbodyRef.insertRow();
+                    var newCell = newRow.insertCell();
+                    var newText = document.createTextNode(data1[0][i]['CHARGE_ID']);
+                    newCell.appendChild(newText);
+
+                    var newCell = newRow.insertCell();
+                    var newText = document.createTextNode(data1[0][i]['DESCRIPTION']);
+                    newCell.appendChild(newText);
+
+                    var newCell = newRow.insertCell();
+                    var block_to_insert = document.createElement('div');
+                    block_to_insert.classList.add('icheck-primary', 'd-inline', 'ml-2');
+                    var input = document.createElement("input");
+                    input.setAttribute('type', 'checkbox');
+                    input.setAttribute('id', 'checkboxPrimary1');
+                    if (data1[0][i]['active'] == '1') {
+                        input.checked = true;
+                    } else {
+                        input.checked = false;
+                    }
+                    input.setAttribute("disabled", true);
+                    var tblblock = block_to_insert.appendChild(input);
+                    newCell.appendChild(tblblock);
+
+                    var newCell = newRow.insertCell();
+                    var block_to_insert = document.createElement('div');
+                    block_to_insert.classList.add('icheck-primary', 'd-inline', 'ml-2');
+                    var input = document.createElement("input");
+                    input.setAttribute('type', 'checkbox');
+                    if (data1[0][i]['FOR_BILLING'] == '1') {
+                        input.checked = true;
+                    } else {
+                        input.checked = false;
+                    }
+                    input.setAttribute("disabled", true);
+                    var tblblock = block_to_insert.appendChild(input);
+                    newCell.appendChild(tblblock);
+
+                    var newCell = newRow.insertCell();
+                    var block_to_insert = document.createElement('div');
+                    block_to_insert.classList.add('icheck-primary', 'd-inline', 'ml-2');
+                    var input = document.createElement("input");
+                    input.setAttribute('type', 'checkbox');
+                    if (data1[0][i]['FOR_PAYMENT'] == '1') {
+                        input.checked = true;
+                    } else {
+                        input.checked = false;
+                    }
+                    input.setAttribute("disabled", true);
+                    var tblblock = block_to_insert.appendChild(input);
+                    newCell.appendChild(tblblock);
+
+                    var newCell = newRow.insertCell();
+                    var block_to_insert = document.createElement('div');
+                    block_to_insert.classList.add('icheck-primary', 'd-inline', 'ml-2');
+                    var input = document.createElement("input");
+                    input.setAttribute('type', 'checkbox');
+                    input.setAttribute('id', 'checkboxPrimary1');
+                    if (data1[0][i]['FOR_RECEIPT'] == '1') {
+                        input.checked = true;
+                    } else {
+                        input.checked = false;
+                    }
+                    input.setAttribute("disabled", true);
+                    var tblblock = block_to_insert.appendChild(input);
+                    newCell.appendChild(tblblock);
+
+                    var newCell = newRow.insertCell();
+                    var itag = document.createElement("i-" + i);
+                    itag.setAttribute("class", "fas fa-edit");
+                    itag.setAttribute("onclick", "editRow(" + data1[0][i]['CHARGE_ID'] + ");");
+                    newCell.appendChild(itag);
+
+                    var newCell = newRow.insertCell();
+                    var itag = document.createElement("i");
+                    itag.setAttribute("class", "fa fa-trash");
+                    itag.setAttribute("aria-hidden", "true");
+                    itag.setAttribute("onclick", "deleteRow(" + data1[0][i]['CHARGE_ID'] + ");");
+                    newCell.appendChild(itag);
+                }
+                resetForm();    // Reset edit form.
+            } else {
+                console.log('waiting for response')
+            }
+        }
+    }
+
+    function deleteRow(recid) {
+        var url = "/delChargeCode";
+        var params = "recid=" + recid;
+        let xhttp = new XMLHttpRequest();
+
+        xhttp.open("GET", url + "?" + params, true);
+        xhttp.send();
+        console.log('JS here');
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response1 = xhttp.responseText;
+                var data1 = JSON.parse(response1);
+                Swal.fire({
+                    position: 'top-end',
+                    type: (data1.includes("Error:") ? "error" : "success"),
+                    text: data1,
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(function () {
+                    displayTable();
+                });
+            }
+        }
+    }
+
+    function editRow(recid) {
+        console.log('go go go ')
+        var url = "/showChargeRow";
+        var params = "recid=" + recid;
+        let xhttp = new XMLHttpRequest();
+
+        xhttp.open("GET", url + "?" + params, true);
+        xhttp.send();
+        console.log('JS here');
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response1 = xhttp.responseText;
+                var data1 = JSON.parse(response1);
+                console.log(data1)
+                document.getElementById("description").value = data1[0]['DESCRIPTION'];
+                input = document.getElementById("checkboxPrimary1");
+                if (data1[0]['active'] == '1') {
+                    input.checked = true;
+                } else {
+                    input.checked = false;
+                }
+                input = document.getElementById("checkboxPrimary2");
+                if (data1[0]['FOR_BILLING'] == '1') {
+                    input.checked = true;
+                } else {
+                    input.checked = false;
+                }
+                input = document.getElementById("checkboxPrimary3");
+                if (data1[0]['FOR_PAYMENT'] == '1') {
+                    input.checked = true;
+                } else {
+                    input.checked = false;
+                }
+                input = document.getElementById("checkboxPrimary4");
+                if (data1[0]['FOR_RECEIPT'] == '1') {
+                    input.checked = true;
+                } else {
+                    input.checked = false;
+                }
+                document.getElementById("Addbtn").style.display = 'none'
+                document.getElementById("Updatebtn").style.display = 'block';
+                console.log("i am in edit row function");
+                var Updatebtn = document.getElementById("updatebutton");
+                console.log("heloo");
+                Updatebtn.setAttribute("onclick", "UpdateChargeCodeRow(" + recid + ");");
+                console.log("heloo2");
+
+            }
+        }
+    }
+
+    function UpdateChargeCodeRow(recid) {
+        console.log("i am in update function")
+        var params = "recid=" + recid;
+        console.log(recid)
+        console.log(params)
+        var des = document.getElementById("description").value
+        var check1 = document.getElementById("checkboxPrimary1").checked
+        var check2 = document.getElementById("checkboxPrimary2").checked
+        var check3 = document.getElementById("checkboxPrimary3").checked
+        var check4 = document.getElementById("checkboxPrimary4").checked
+        var ChargeCodeDetailsForUpdate = {
+            Chargeid: recid,
+            description: des,
+            active: check1,
+            billing: check2,
+            payment: check3,
+            receipt: check4,
+        }
+        console.log(ChargeCodeDetailsForUpdate)
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("POST", '/addChargeById', true);
+        xhttp.send(JSON.stringify(ChargeCodeDetailsForUpdate))
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response = xhttp.responseText;
+                var data1 = JSON.parse(response)
+                if (data1 == true) {
+                    msg = 'Record sucessfully changed.';
+                    Swal.fire({
+                        position: 'top-end',
+                        type: ("success"),
+                        text: msg,
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function () {
+                        location.reload();
+                    });
+
+                    document.getElementById("Addbtn").style.display = 'block'
+                    document.getElementById("Updatebtn").style.display = 'none';
+                    displayTable();
+                }
+            }
+
+        }
+    }
+
+    function AddChargeCode() {
+        var Desc = document.getElementById('description').value;
+        var bill = document.getElementById('checkboxPrimary2').checked;
+        var pay = document.getElementById('checkboxPrimary3').checked;
+        var rece = document.getElementById('checkboxPrimary4').checked;
+        if (Desc.length == 0) {
+                Swal.fire({
+                    position: 'top-end',
+                    type: ("warning"),
+                    text: "Please fill/choose all fields",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(function () {
+                    return;
+                });
+            }
+        else{
+        let ChargeDetails = {
+            description: Desc,
+            billing: bill,
+            payment: pay,
+            receipt: rece,
+        }
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("POST", '/addChargeCode', true);
+        xhttp.send(JSON.stringify(ChargeDetails))
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response = xhttp.responseText;
+                var data = JSON.parse(response)
+                if (data == true) {
+                    Swal.fire({
+                        position: 'top-end',
+                        type: ("success"),
+                        text: "Record has been successfully Added.",
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function () {
+                        displayTable();
+                    });
+                } else {
+                    console.log('waiting for response');
+                    Swal.fire({
+                        position: 'top-end',
+                        type: ("error"),
+                        text: "Record cannot be Added.",
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function () {
+                        return;
+                    });
+                }
+            } else {
+                console.log('waiting for response2');
+                Swal.fire({
+                    position: 'top-end',
+                    type: ("error"),
+                    text: "Record cannot be Added.",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(function () {
+                    return;
+                });
+            }
+        }
+
+        }
+    }
+
+    function resetForm() {
+        document.getElementById("description").value = '';
+        document.getElementById("checkboxPrimary1").checked = true;
+        document.getElementById("checkboxPrimary2").checked = false;
+        document.getElementById("checkboxPrimary3").checked = false;
+        document.getElementById("checkboxPrimary4").checked = false;
+    }
+</script>
+
+<!--Common Js-->
+{% include "commonjs.html" %}
+
+<!-- page script -->
+
+<script>
+    $(function () {
+        $('#example1').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false
+        });
+    });
+</script>
+
+
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2({
+            theme: 'bootstrap4'
+        })
+
+        //Datemask dd/mm/yyyy
+        $('#datemask').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/yyyy'})
+        //Datemask2 mm/dd/yyyy
+        $('#datemask2').inputmask('mm/dd/yyyy', {'placeholder': 'mm/dd/yyyy'})
+        //Money Euro
+        $('[data-mask]').inputmask()
+
+        //Date range picker
+        $('#reservation').daterangepicker()
+        //Date range picker with time picker
+        $('#reservationtime').daterangepicker({
+            timePicker: true,
+            timePickerIncrement: 30,
+            locale: {
+                format: 'MM/DD/YYYY hh:mm A'
+            }
+        })
+        //Date range as a button
+        $('#daterange-btn').daterangepicker(
+            {
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                startDate: moment().subtract(29, 'days'),
+                endDate: moment()
+            },
+            function (start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+            }
+        )
+
+        //Timepicker
+        $('#timepicker').datetimepicker({
+            format: 'LT'
+        })
+
+        //Bootstrap Duallistbox
+        $('.duallistbox').bootstrapDualListbox()
+
+        //Colorpicker
+        $('.my-colorpicker1').colorpicker()
+        //color picker with addon
+        $('.my-colorpicker2').colorpicker()
+
+        $('.my-colorpicker2').on('colorpickerChange', function (event) {
+            $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
+        });
+    })
+</script>
+
+</body>
+
+</html>

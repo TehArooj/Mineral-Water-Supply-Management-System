@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bills</title>
+
+    {% include "styles.html" %}
+
+</head>
+
+<body class="sidebar-mini layout-fixed control-sidebar-open" style="height: auto;"
+      onload="displayTable(); setOrderNooptions(); setChargeCodeOptionsBillig();">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    {% include "navbar.html" %}
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar elevation-4 sidebar-light-info">
+        <!-- Brand Logo -->
+        <a href="#" class="brand-link navbar-info">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo"
+                 class="brand-image img-circle elevation-3" style="opacity: .8">
+            <span class="brand-text font-weight-light text-white">Mineral Water MS</span>
+        </a>
+
+        <!-- Sidebar -->
+        {% include "sidebar.html" %}
+        <!-- /.sidebar -->
+    </aside>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" style="min-height: 725px;">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0 text-dark">Bills</h1>
+                    </div><!-- /.col -->
+
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-12">
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <div class="input-group">
+                                    <input id="docDate" type="date" class="form-control">
+
+                                    <select id="my-select1" class="custom-select" name=""
+                                            onchange="getOrderNooptions(); showAmount();">
+                                        <option>Order No.</option>
+
+                                    </select>
+                                    <select id="my-select2" class="custom-select" name=""
+                                            onchange="getChargeCodeOptions();">
+                                        <option>Charge Code</option>
+
+                                    </select>
+                                    <input id="amount" type="text" class="form-control" placeholder="Amount"
+                                           disabled>
+
+
+                                    <span class="input-group-append">
+                                            <button type="button" class="btn btn-info btn-flat"
+                                                    onclick="addBill();">Add</button>
+                                        </span>
+                                </div>
+                            </h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="example1" class="table table-bordered table-striped ">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Date</th>
+                                        <th>Order No.</th>
+                                        <!--<th>Customer Name</th>-->
+                                        <th>Charge Code</th>
+                                        <th>Amount</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Footer -->
+    {% include "footer.html" %}
+</div>
+<!-- Logout Dialog -->
+{% include "modal_logout.html" %}
+
+
+<script>
+    function displayTable() {
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("GET", '/getBills');
+        xhttp.send()
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response1 = xhttp.responseText;
+
+                var data1 = JSON.parse(response1)
+                let count = data1[1];
+
+                var tbodyRef = document.getElementById('example1').getElementsByTagName('tbody')[0];
+                tbodyRef.innerHTML = " ";
+                for (var i = 0; i < count; i++) {
+                    var newRow = tbodyRef.insertRow();
+                    var newCell = newRow.insertCell();
+                    var newText = document.createTextNode(data1[0][i]['bill_id']);
+                    newCell.appendChild(newText);
+                    var newCell = newRow.insertCell();
+                    var newText = document.createTextNode(data1[0][i]['bill_date']);
+                    newCell.appendChild(newText);
+                    var newCell = newRow.insertCell();
+                    var newText = document.createTextNode(data1[0][i]['order_id']);
+                    newCell.appendChild(newText);
+                    var newCell = newRow.insertCell();
+                    var newText = document.createTextNode(data1[0][i]['description']);
+                    newCell.appendChild(newText);
+                    var newCell = newRow.insertCell();
+                    var newText = document.createTextNode(data1[0][i]['amount']);
+                    newCell.appendChild(newText);
+
+                    var newCell = newRow.insertCell();
+                    var itag = document.createElement("i");
+                    itag.setAttribute("class", "fa fa-trash");
+                    itag.setAttribute("aria-hidden", "true");
+                    itag.setAttribute("onclick", "deleteRow(" + data1[0][i]['bill_id'] + ");");
+                    newCell.appendChild(itag);
+
+
+                }
+                resetForm();
+            }
+        }
+    }
+
+    function deleteRow(recid) {
+        var url = "/delBill";
+        var params = "recid=" + recid;
+        let xhttp = new XMLHttpRequest();
+
+        xhttp.open("GET", url + "?" + params, true);
+        xhttp.send();
+        console.log('JS here');
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response1 = xhttp.responseText;
+                var data1 = JSON.parse(response1);
+                Swal.fire({
+                    position: 'top-end',
+                    type: (data1.includes("Error:") ? "error" : "success"),
+                    text: data1,
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(function () {
+                    displayTable();
+                });
+            }
+
+        }
+    }
+
+    function setOrderNooptions() {
+        document.getElementById('my-select1').innerHTML = ""
+        var s_id = document.getElementById('my-select1');
+        s_id.placeholder = "Order No.";
+        myOption = document.createElement("option");
+        myOption.text = "Order No.";
+        myOption.value = " ";
+        s_id.appendChild(myOption);
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("POST", '/setOrderNooptions', true);
+        xhttp.send();
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response1 = xhttp.responseText;
+                var data1 = JSON.parse(response1)
+                let count = data1[1];
+                for (var i = 0; i < count; i++) {
+                    myOption = document.createElement("option");
+                    myOption.text = data1[0][i]['order_id'];
+                    myOption.value = data1[0][i]['order_id'];
+                    s_id.appendChild(myOption);
+                }
+
+            }
+        }
+    }
+
+    let selected_orderNo = document.getElementById('my-select1');
+
+    function getOrderNooptions() {
+        selected_orderNo = document.getElementById('my-select1').value;
+    }
+
+    function showAmount() {
+        selected_orderNo = document.getElementById('my-select1').value;
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("POST", '/showAmountBills', true);
+
+        xhttp.send(selected_orderNo);
+
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response1 = xhttp.responseText;
+                console.log(response1)
+                var data1 = JSON.parse(response1)
+                document.getElementById('amount').value = data1[0]['amount'];
+            }
+        }
+    }
+
+    function setChargeCodeOptionsBillig() {
+        document.getElementById('my-select2').innerHTML = ""
+        var s_id = document.getElementById('my-select2')
+        myOption = document.createElement("option");
+        myOption.text = "Charge Code";
+        myOption.value = " ";
+        s_id.appendChild(myOption);
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("POST", '/setChargeCodeOptionsBillig', true);
+
+        xhttp.send();
+
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response1 = xhttp.responseText;
+                var data1 = JSON.parse(response1)
+                let count = data1[1];
+                for (var i = 0; i < count; i++) {
+                    myOption = document.createElement("option");
+                    myOption.text = data1[0][i]['description'];
+                    myOption.value = data1[0][i]['description'];
+                    s_id.appendChild(myOption);
+                }
+
+            }
+
+        }
+    }
+
+    let selected_CC = document.getElementById('my-select2');
+
+    function getChargeCodeOptions() {
+        selected_CC = document.getElementById('my-select2').value;
+    }
+
+
+    function addBill() {
+        var date = document.getElementById('docDate').value;
+        var order_no = document.getElementById('my-select1').value;
+        var charge_code = document.getElementById('my-select2').value;
+        var amount = document.getElementById('amount').value;
+        let Bill_Details = {
+            Date: date,
+            OrderNo: order_no,
+            ChargeCode: charge_code,
+            Amount: amount
+        }
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("POST", '/addBill', true);
+        xhttp.send(JSON.stringify(Bill_Details))
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response = xhttp.responseText;
+                var data = JSON.parse(response)
+                if (data == true) {
+
+                    Swal.fire({
+                        position: 'top-end',
+                        type: ("success"),
+                        text: "Record has been successfully Added.",
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function () {
+                        displayTable();
+                    });
+                } else {
+                    console.log('waiting for response');
+                    Swal.fire({
+                        position: 'top-end',
+                        type: ("error"),
+                        text: "Record cannot be Added.",
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function () {
+                        return;
+                    });
+                }
+            } else {
+                console.log('waiting for response 2');
+                Swal.fire({
+                    position: 'top-end',
+                    type: ("error"),
+                    text: "Record cannot be Added.",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(function () {
+                    return;
+                });
+            }
+
+        }
+
+    }
+
+    function resetForm() {
+        document.getElementById('docDate').value = '';
+        document.getElementById('my-select1').value = '';
+        document.getElementById('my-select2').value = '';
+        document.getElementById('amount').value = '';
+    }
+</script>
+
+<!--Common Js-->
+{% include "commonjs.html" %}
+
+<script>
+    $(function () {
+        $('#example1').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+        });
+
+    });
+</script>
+
+
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2({
+            theme: 'bootstrap4'
+        })
+
+        //Datemask dd/mm/yyyy
+        $('#datemask').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/yyyy'})
+        //Datemask2 mm/dd/yyyy
+        $('#datemask2').inputmask('mm/dd/yyyy', {'placeholder': 'mm/dd/yyyy'})
+        //Money Euro
+        $('[data-mask]').inputmask()
+
+        //Date range picker
+        $('#reservation').daterangepicker()
+        //Date range picker with time picker
+        $('#reservationtime').daterangepicker({
+            timePicker: true,
+            timePickerIncrement: 30,
+            locale: {
+                format: 'MM/DD/YYYY hh:mm A'
+            }
+        })
+        //Date range as a button
+        $('#daterange-btn').daterangepicker(
+            {
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                startDate: moment().subtract(29, 'days'),
+                endDate: moment()
+            },
+            function (start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+            }
+        )
+
+        //Timepicker
+        $('#timepicker').datetimepicker({
+            format: 'LT'
+        })
+
+        //Bootstrap Duallistbox
+        $('.duallistbox').bootstrapDualListbox()
+
+        //Colorpicker
+        $('.my-colorpicker1').colorpicker()
+        //color picker with addon
+        $('.my-colorpicker2').colorpicker()
+
+        $('.my-colorpicker2').on('colorpickerChange', function (event) {
+            $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
+        });
+    })
+</script>
+
+</body>
+
+</html>

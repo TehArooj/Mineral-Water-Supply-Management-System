@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders</title>
+
+    {% include "styles.html" %}
+</head>
+
+<body class="sidebar-mini layout-fixed control-sidebar-open" style="height: auto;"
+      onload="displayOrders(); displayEmployeesOptions();">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    {% include "navbar.html" %}
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar elevation-4 sidebar-light-info">
+        <!-- Brand Logo -->
+        <a href="#" class="brand-link navbar-info">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo"
+                 class="brand-image img-circle elevation-3" style="opacity: .8">
+            <span class="brand-text font-weight-light text-white">Mineral Water MS</span>
+        </a>
+
+        <!-- Sidebar -->
+        {% include "sidebar.html" %}
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" style="min-height: 725px;">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0 text-dark">Orders</h1>
+                    </div><!-- /.col -->
+
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-12">
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <a href="/place_new_order" class="btn btn-success"><i class="fas fa-plus-square"
+                                                                                      aria-hidden="true"></i> New</a>
+                            </h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="example1" class="table table-bordered table-striped ">
+                                    <thead>
+                                    <tr>
+                                        <th>Order No.</th>
+                                        <th>Customer</th>
+                                        <th>Product</th>
+                                        <th>Order Date</th>
+                                        <th>Delivery Date</th>
+                                        <th>Rate</th>
+                                        <th>Quantity</th>
+                                        <th>Total Amount</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Footer -->
+    {% include "footer.html" %}
+
+    <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<!-- Logout Dialog -->
+{% include "modal_logout.html" %}
+
+<!-- Assign To Dialog -->
+{% include "modal_assign.html" %}
+
+<!-- Functionality -->
+<script>
+    function displayOrders() {
+        console.log("inside display orders js func")
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("GET", '/displayOrders');
+        xhttp.send()
+
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response1 = xhttp.responseText;
+                var data1 = JSON.parse(response1)
+                let count = data1[1];
+
+                var tbodyRef = document.getElementById('example1').getElementsByTagName('tbody')[0];
+                tbodyRef.innerHTML = " ";
+                for (var i = 0; i < count; i++) {
+                    var newRow = tbodyRef.insertRow();
+                    var newCell = newRow.insertCell();
+                    var newText = document.createTextNode(data1[0][i]['order_id']);
+                    newCell.appendChild(newText);
+                    var newCell = newRow.insertCell();
+                    var newText = document.createTextNode(data1[0][i]['customer_name']);
+                    newCell.appendChild(newText);
+                    var newCell = newRow.insertCell();
+                    var newText = document.createTextNode(data1[0][i]['product_name']);
+                    newCell.appendChild(newText);
+                    var newCell = newRow.insertCell();
+                    var newText = document.createTextNode(data1[0][i]['order_date']);
+                    newCell.appendChild(newText);
+                    var newCell = newRow.insertCell();
+                    var newText = document.createTextNode(data1[0][i]['delivery_date']);
+                    newCell.appendChild(newText);
+                    var newCell = newRow.insertCell();
+                    var newText = document.createTextNode(data1[0][i]['rate']);
+                    newCell.appendChild(newText);
+                    var newCell = newRow.insertCell();
+                    var newText = document.createTextNode(data1[0][i]['quantity']);
+                    newCell.appendChild(newText);
+                    var newCell = newRow.insertCell();
+                    var newText = document.createTextNode(data1[0][i]['amount']);
+                    newCell.appendChild(newText);
+                    var newCell = newRow.insertCell();
+                    var newText = document.createTextNode(data1[0][i]['status']);
+                    newCell.appendChild(newText);
+
+                    // Deliver Order Link
+                    var newCell = newRow.insertCell();
+                    if (data1[0][i]['status'] == ('Assigned')) {
+                        var itag = document.createElement("i");
+                        itag.setAttribute("class", "fas fa-home");
+                        itag.setAttribute("aria-hidden", "true");
+                        itag.setAttribute("onclick", "setDelivered(" + data1[0][i]['order_id'] + ");");
+                        newCell.appendChild(itag);
+                    }
+
+                    // Bill Order Link
+                    var newCell = newRow.insertCell();
+                    if (data1[0][i]['status'] == 'Delivered') {
+                        var itag = document.createElement("i-" + i);
+                        itag.setAttribute("class", "fa fa-check");
+                        itag.setAttribute("aria-hidden", "true");
+                        itag.setAttribute("onclick", "setBilled(" + data1[0][i]['order_id'] + ");");
+                        newCell.appendChild(itag);
+                    }
+
+                    // Cancle Order Link
+                    var newCell = newRow.insertCell();
+                    if (data1[0][i]['status'] == 'New' || data1[0][i]['status'] == 'Assigned') {
+                        var itag = document.createElement("i");
+                        itag.setAttribute("class", "fa fa-ban");
+                        itag.setAttribute("aria-hidden", "true");
+                        itag.setAttribute("onclick", "setCancelled(" + data1[0][i]['order_id'] + ");");
+                        newCell.appendChild(itag);
+                    }
+
+                    // Assign Order Link
+                    var newCell = newRow.insertCell();
+                    if (data1[0][i]['status'] !== 'Delivered') {
+                        newCell.innerHTML = "<a href='#' onclick='recid = " + data1[0][i]['order_id'] + ";' class='identifyingClass' data-toggle='modal' data-target='#modal-assign' ><i class='fa fa-running' aria-hidden='true'></i></a>"
+                    }
+                }
+
+            }
+        }
+    }
+
+    function setAssignedTo(recid) {
+        empid = document.getElementById('employee-select').value;
+
+        if (empid) {
+            var url = "/setAssignedTo";
+            var params = "recid=" + recid + "&empid=" + empid;
+            let xhttp = new XMLHttpRequest();
+
+            xhttp.open("GET", url + "?" + params, true);
+            xhttp.send();
+            xhttp.onreadystatechange = function () {
+                if (xhttp.readyState == 4 && xhttp.status == 200) {
+                    var response1 = xhttp.responseText;
+                    var data1 = JSON.parse(response1);
+                    Swal.fire({
+                        position: 'top-end',
+                        type: (data1.includes("Error:") ? "error" : "success"),
+                        text: data1,
+                        showConfirmButton: false,
+                        timer: 2000
+                    }).then(function () {
+                        location.reload();
+                    });
+                }
+            }
+        } else {
+            alert('Please choose an employee.');
+        }
+    }
+
+    function displayEmployeesOptions() {
+        document.getElementById('employee-select').innerHTML = ""
+        var select_id = document.getElementById('employee-select')
+        myOption = document.createElement("option");
+        myOption.text = "Choose Employee";
+        myOption.value = "";
+        select_id.appendChild(myOption);
+
+        let xhttp = new XMLHttpRequest();
+        console.log("inside employee-select option func in js ")
+        xhttp.open("POST", '/displayEmployeesOptions', true);
+        xhttp.send();
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response1 = xhttp.responseText;
+                console.log("option we got for Employees-name are:")
+                console.log(response1)
+                var data1 = JSON.parse(response1)
+                let count = data1[1];
+
+                for (var i = 0; i < count; i++) {
+                    var opt = document.createElement('option');
+                    opt.text = data1[0][i]['name'];
+                    opt.value = data1[0][i]['emp_id'];
+                    select_id.appendChild(opt);
+                }
+
+            }
+        }
+    }
+
+    function setDelivered(recid) {
+        var url = "/setDelivered";
+        var params = "recid=" + recid;
+        let xhttp = new XMLHttpRequest();
+
+        xhttp.open("GET", url + "?" + params, true);
+        xhttp.send();
+        console.log('JS here');
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response1 = xhttp.responseText;
+                var data1 = JSON.parse(response1);
+                Swal.fire({
+                    position: 'top-end',
+                    type: (data1.includes("Error:") ? "error" : "success"),
+                    text: data1,
+                    showConfirmButton: false,
+                    timer: 2000
+                }).then(function () {
+                    location.reload();
+                });
+            }
+        }
+    }
+
+    function setBilled(recid) {
+        var url = "/setBilled";
+        var params = "recid=" + recid;
+        let xhttp = new XMLHttpRequest();
+
+        xhttp.open("GET", url + "?" + params, true);
+        xhttp.send();
+        console.log('JS here');
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response1 = xhttp.responseText;
+                var data1 = JSON.parse(response1);
+
+                    if (data1 = "Status has been changed to Billed successfully.") {
+                          Swal.fire({
+                                position: 'top-end',
+                                type: (data1.includes("Error:") ? "error" : "success"),
+                                text: data1,
+                                showConfirmButton: false,
+                                timer: 2000
+                            }).then(function () {
+                                location.reload();
+                            });
+                        console.log("ready for Billed")
+                        var url = "/getBilledDataAgainstId";
+                        xhttp.open("GET", url + "?" + params, true);
+                        xhttp.send();
+                        console.log('JS here');
+                        xhttp.onreadystatechange = function () {
+                            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                               var response1 = xhttp.responseText;
+                               var data1 = JSON.parse(response1);
+                               console.log(data1)
+
+
+                            } else {
+                                console.log('waiting for response')
+                            }
+
+
+
+                        }
+                    }
+
+            }
+
+        }
+    }
+
+    function setCancelled(recid) {
+        var url = "/setCancelled";
+        var params = "recid=" + recid;
+        let xhttp = new XMLHttpRequest();
+
+        xhttp.open("GET", url + "?" + params, true);
+        xhttp.send();
+        console.log('JS here');
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response1 = xhttp.responseText;
+                var data1 = JSON.parse(response1);
+                Swal.fire({
+                    position: 'top-end',
+                    type: (data1.includes("Error:") ? "error" : "success"),
+                    text: data1,
+                    showConfirmButton: false,
+                    timer: 2000
+                }).then(function () {
+                    location.reload();
+                });
+
+            }
+        }
+    }
+
+
+</script>
+
+{% include "commonjs.html" %}
+
+<script>
+    $(function () {
+        $('#example1').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+        });
+
+    });
+</script>
+
+
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2({
+            theme: 'bootstrap4'
+        })
+
+        //Datemask dd/mm/yyyy
+        $('#datemask').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/yyyy'})
+        //Datemask2 mm/dd/yyyy
+        $('#datemask2').inputmask('mm/dd/yyyy', {'placeholder': 'mm/dd/yyyy'})
+        //Money Euro
+        $('[data-mask]').inputmask()
+
+        //Date range picker
+        $('#reservation').daterangepicker()
+        //Date range picker with time picker
+        $('#reservationtime').daterangepicker({
+            timePicker: true,
+            timePickerIncrement: 30,
+            locale: {
+                format: 'MM/DD/YYYY hh:mm A'
+            }
+        })
+        //Date range as a button
+        $('#daterange-btn').daterangepicker(
+            {
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                startDate: moment().subtract(29, 'days'),
+                endDate: moment()
+            },
+            function (start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+            }
+        )
+
+        //Timepicker
+        $('#timepicker').datetimepicker({
+            format: 'LT'
+        })
+
+        //Bootstrap Duallistbox
+        $('.duallistbox').bootstrapDualListbox()
+
+        //Colorpicker
+        $('.my-colorpicker1').colorpicker()
+        //color picker with addon
+        $('.my-colorpicker2').colorpicker()
+
+        $('.my-colorpicker2').on('colorpickerChange', function (event) {
+            $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
+        });
+    })
+</script>
+
+</body>
+
+</html>

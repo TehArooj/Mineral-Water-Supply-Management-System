@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  {% include "styles.html" %}
+
+
+</head>
+
+
+<body class="sidebar-mini layout-fixed control-sidebar-open" style="height: auto;"
+  onload="getDashboardCardsData(); getDashboardChartData();">
+  <div class="wrapper">
+
+    <!-- Navbar -->
+    {% include "navbar.html" %}
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar elevation-4 sidebar-light-info">
+      <!-- Brand Logo -->
+      <a href="#" class="brand-link navbar-info">
+        <img src="{{ url_for('static', filename='images/logo.png')}}" alt="Logo"
+          class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light text-white">Mineral Water MS</span>
+      </a>
+
+      <!-- Sidebar -->
+      {% include "sidebar.html" %}
+      <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" style="min-height: 725px;">
+      <!-- Content Header (Page header) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-dark">Dashboard</h1>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="container-fluid">
+          <!-- Small boxes (Stat box) -->
+          <div class="row">
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-info">
+                <div class="inner">
+                  <h3 id="txt_new_orders">0</h3>
+
+                  <p>New / Assigned Orders</p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-users"></i>
+                </div>
+                <a href="/new_orders" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-success">
+                <div class="inner">
+                  <h3 id="txt_delivered_orders">0</h3>
+
+                  <p>Delivered Orders</p>
+                </div>
+
+                <div class="icon">
+                  <i class="fas fa-home"></i>
+                </div>
+                <a href="/delivered_orders" class="small-box-footer">More info <i
+                    class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-warning">
+                <div class="inner">
+                  <h3 id="txt_billed_orders">0</h3>
+
+                  <p>Billed Orders</p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-dollar-sign"></i>
+                </div>
+                <a href="/rpt_salesSummary" class="small-box-footer">More info <i
+                    class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-danger">
+                <div class="inner">
+                  <h3 id="txt_cancelled_orders">0</h3>
+
+                  <p>Cancelled Orders</p>
+                </div>
+                <div class="icon">
+                  <i class="fa fa-ban"></i>
+                </div>
+                <a href="/cancelled_orders" class="small-box-footer">More info <i
+                    class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+
+          </div>
+          <!-- /.row -->
+          <!-- Main row -->
+          <div class="row">
+            <!-- Left col -->
+
+            <!-- right col -->
+            <section class="container-fluid">
+              <!-- STACKED BAR CHART -->
+              <div class="card card-success">
+                <div class="card-header">
+                  <h3 class="card-title">Accounting Analysis</h3>
+                </div>
+                <div class="card-body">
+                  <div class="chart">
+                    <canvas id="stackedBarChart" style="height:330px; min-height:300px"></canvas>
+                  </div>
+                </div>
+                <!-- /.card-body -->
+              </div>
+
+            </section>
+          </div>
+          <!-- /.row (main row) -->
+        </div><!-- /.container-fluid -->
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- Footer -->
+    {% include "footer.html" %}
+  </div>
+  <!-- Logout Dialog -->
+  {% include "modal_logout.html" %}
+
+
+  <!--Common Js-->
+  {% include "commonjs.html" %}
+
+
+  <!-- page script -->
+
+  <script>
+    $(function () {
+      $('#example1').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+      });
+
+    });
+  </script>
+
+
+  <script>
+    $(function () {
+      //Initialize Select2 Elements
+      $('.select2').select2({
+        theme: 'bootstrap4'
+      })
+
+      //Datemask dd/mm/yyyy
+      $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+      //Datemask2 mm/dd/yyyy
+      $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+      //Money Euro
+      $('[data-mask]').inputmask()
+
+      //Date range picker
+      $('#reservation').daterangepicker()
+      //Date range picker with time picker
+      $('#reservationtime').daterangepicker({
+        timePicker: true,
+        timePickerIncrement: 30,
+        locale: {
+          format: 'MM/DD/YYYY hh:mm A'
+        }
+      })
+      //Date range as a button
+      $('#daterange-btn').daterangepicker(
+        {
+          ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          },
+          startDate: moment().subtract(29, 'days'),
+          endDate: moment()
+        },
+        function (start, end) {
+          $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+        }
+      )
+
+      //Timepicker
+      $('#timepicker').datetimepicker({
+        format: 'LT'
+      })
+
+      //Bootstrap Duallistbox
+      $('.duallistbox').bootstrapDualListbox()
+
+      //Colorpicker
+      $('.my-colorpicker1').colorpicker()
+      //color picker with addon
+      $('.my-colorpicker2').colorpicker()
+
+      $('.my-colorpicker2').on('colorpickerChange', function (event) {
+        $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
+      });
+    })
+  </script>
+
+  <script>
+    // Populate dashboard cards.
+    function getDashboardCardsData() {
+      let xhttp = new XMLHttpRequest();
+      xhttp.open("GET", '/getDashboardCardsData');
+      xhttp.send()
+      xhttp.onreadystatechange = function () {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+          let response1 = xhttp.responseText;
+          console.log(response1);
+          let data1 = JSON.parse(response1);
+          let billedOrders = data1.billed_orders;
+          let cancelledOrders = data1.cancelled_orders;
+          let deliveredOrders = data1.delivered_orders;
+          let newOrders = data1.new_orders;
+
+          /*
+          console.log(billedOrders);
+          console.log(cancelledOrders);
+          console.log(deliveredOrders);
+          console.log(newOrders);
+          */
+
+          document.getElementById("txt_billed_orders").innerHTML = billedOrders.toString();
+          document.getElementById("txt_cancelled_orders").innerHTML = cancelledOrders.toString();
+          document.getElementById("txt_delivered_orders").innerHTML = deliveredOrders.toString();
+          document.getElementById("txt_new_orders").innerHTML = newOrders.toString();
+        }
+      }
+    }
+  </script>
+
+
+  <script>
+    // Build stack bar chart
+    function getDashboardChartData() {
+      let xhttp = new XMLHttpRequest();
+      xhttp.open("GET", '/getDashboardChartData');
+      xhttp.send()
+      xhttp.onreadystatechange = function () {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+          let response1 = xhttp.responseText;
+          console.log(response1);
+          let data1 = JSON.parse(response1);
+          let cancellation = data1.cancellation;
+          let payments = data1.payments;
+          let receipts = data1.receipts;
+          let sales = data1.sales;
+          /*
+          console.log(cancellation);
+          console.log(payments);
+          console.log(receipts);
+          console.log(sales);
+          */
+
+          let stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d');
+          let stackedBarChartData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept',
+              'Oct', 'Nov', 'Dec'
+            ],
+            datasets: [
+              {
+                label: 'Sales',
+                backgroundColor: 'rgba(60,141,188,0.9)',
+                borderColor: 'rgba(60,141,188,0.8)',
+                pointRadius: false,
+                pointColor: '#3b8bba',
+                pointStrokeColor: 'rgba(60,141,188,1)',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(60,141,188,1)',
+                data: sales
+              },
+              {
+                label: 'Payments',
+                backgroundColor: 'rgba(210, 214, 222, 1)',
+                borderColor: 'rgba(210, 214, 222, 1)',
+                pointRadius: false,
+                pointColor: 'rgba(210, 214, 222, 1)',
+                pointStrokeColor: '#c1c7d1',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(220,220,220,1)',
+                data: payments
+              },
+              {
+                label: 'Reciepts',
+                backgroundColor: 'rgb(255, 193, 7)',
+                borderColor: 'rgba(210, 214, 222, 1)',
+                pointRadius: false,
+                pointColor: 'rgba(210, 214, 222, 1)',
+                pointStrokeColor: '#c1c7d1',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(220,220,220,1)',
+                data: receipts
+              },
+              {
+                label: 'Cancellation',
+                backgroundColor: 'rgb(220, 53, 69)',
+                borderColor: 'rgba(210, 214, 222, 1)',
+                pointRadius: false,
+                pointColor: 'rgba(210, 214, 222, 1)',
+                pointStrokeColor: '#c1c7d1',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(220,220,220,1)',
+                data: cancellation
+              }
+            ],
+          }
+
+          let stackedBarChartOptions = {
+
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              xAxes: [{
+                stacked: true,
+              }],
+              yAxes: [{
+                stacked: true
+              }]
+            }
+          }
+
+          let stackedBarChart = new Chart(stackedBarChartCanvas, {
+            type: 'bar',
+            data: stackedBarChartData,
+            options: stackedBarChartOptions
+          })
+
+        }
+      }
+    }
+  </script>
+
+</body>
+
+</html>

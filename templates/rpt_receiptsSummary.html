@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipts Summary</title>
+    {% include "styles.html" %}
+
+
+</head>
+
+<body class="sidebar-mini layout-fixed control-sidebar-open" style="height: auto;"
+    onload="summary1(); summary2(); details();">
+    <div class="wrapper">
+
+        <!-- Navbar -->
+        {% include "navbar.html" %}>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar elevation-4 sidebar-light-info">
+            <!-- Brand Logo -->
+            <a href="#" class="brand-link navbar-info">
+                <img src="{{ url_for('static', filename='images/logo.png')}}" alt="Logo"
+                    class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light text-white">Mineral Water MS</span>
+            </a>
+
+            <!-- Sidebar -->
+            {% include "sidebar.html" %}
+            <!-- /.sidebar -->
+        </aside>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper" style="min-height: 725px;">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0 text-dark">Receipts Summary</h1>
+                        </div><!-- /.col -->
+
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="row">
+                    <div class="col-6">
+
+                        <div class="card">
+
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="summary1" class="table table-bordered table-striped ">
+                                        <thead>
+                                            <tr>
+                                                <th>Charge</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <div class="col-6">
+
+                        <div class="card">
+
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="summary2" class="table table-bordered table-striped ">
+                                        <thead>
+                                            <tr>
+                                                <th>Charge</th>
+                                                <th>Customer</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <div class="col-12">
+
+                        <div class="card">
+
+                            <div class="card-body">
+                                <h4>Details</h4>
+                                <div class="table-responsive">
+                                    <table id="details" class="table table-bordered table-striped ">
+                                        <thead>
+                                            <tr>
+                                                <th>Receipt Date</th>
+                                                <th>Receipt No.</th>
+                                                <th>Charge</th>
+                                                <th>Customer</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+
+            </section>
+
+            <!-- Main content -->
+
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <!-- Footer -->
+        {% include "footer.html" %}
+
+    </div>
+    <!-- Logout Dialog -->
+    {% include "modal_logout.html" %}
+
+
+    <!--Common Js-->
+    {% include "commonjs.html" %}
+    <!-- Fucntionality-->
+
+    <script>
+        function summary1() {
+            let xhttp = new XMLHttpRequest();
+            xhttp.open("GET", '/getReceiptByCharge');
+            xhttp.send()
+            xhttp.onreadystatechange = function () {
+                if (xhttp.readyState == 4 && xhttp.status == 200) {
+
+                    var response1 = xhttp.responseText;
+                    console.log(response1)
+                    var data1 = JSON.parse(response1)
+                    let count = data1[1];
+                    console.log(data1[0][0])
+                    console.log(data1[0][1])
+
+                    var tbodyRef = document.getElementById('summary1').getElementsByTagName('tbody')[0];
+                    tbodyRef.innerHTML = " ";
+                    for (var i = 0; i < count; i++) {
+                        var newRow = tbodyRef.insertRow();
+
+                        var newCell = newRow.insertCell();
+                        var newText = document.createTextNode(data1[0][i]['charge']);
+                        newCell.appendChild(newText);
+
+                        var newCell = newRow.insertCell();
+                        var newText = document.createTextNode(data1[0][i]['amount']);
+                        newCell.appendChild(newText);
+
+                        console.log('end');
+                    }
+
+                }
+            }
+        }
+
+        function summary2() {
+            let xhttp = new XMLHttpRequest();
+            xhttp.open("GET", '/getReceiptByCustomer');
+            xhttp.send()
+            xhttp.onreadystatechange = function () {
+                if (xhttp.readyState == 4 && xhttp.status == 200) {
+
+                    var response1 = xhttp.responseText;
+                    console.log(response1)
+                    var data1 = JSON.parse(response1)
+                    let count = data1[1];
+                    console.log(data1[0][0])
+                    console.log(data1[0][1])
+                    console.log(data1[0][2])
+
+                    var tbodyRef = document.getElementById('summary2').getElementsByTagName('tbody')[0];
+                    tbodyRef.innerHTML = " ";
+                    for (var i = 0; i < count; i++) {
+                        var newRow = tbodyRef.insertRow();
+
+                        var newCell = newRow.insertCell();
+                        var newText = document.createTextNode(data1[0][i]['charge']);
+                        newCell.appendChild(newText);
+
+                        var newCell = newRow.insertCell();
+                        var newText = document.createTextNode(data1[0][i]['customer']);
+                        newCell.appendChild(newText);
+
+                        var newCell = newRow.insertCell();
+                        var newText = document.createTextNode(data1[0][i]['amount']);
+                        newCell.appendChild(newText);
+
+                        console.log('end');
+                    }
+
+                }
+            }
+        }
+
+        function details() {
+            let xhttp = new XMLHttpRequest();
+            xhttp.open("GET", '/getdetailedReceipts');
+            xhttp.send()
+            xhttp.onreadystatechange = function () {
+                if (xhttp.readyState == 4 && xhttp.status == 200) {
+
+                    var response1 = xhttp.responseText;
+                    console.log(response1)
+                    var data1 = JSON.parse(response1)
+                    let count = data1[1];
+                    console.log(data1[0][0])
+                    console.log(data1[0][1])
+
+                    var tbodyRef = document.getElementById('details').getElementsByTagName('tbody')[0];
+                    tbodyRef.innerHTML = " ";
+                    for (var i = 0; i < count; i++) {
+                        var newRow = tbodyRef.insertRow();
+
+                        var newCell = newRow.insertCell();
+                        var newText = document.createTextNode(data1[0][i]['doc_date']);
+                        newCell.appendChild(newText);
+
+                        var newCell = newRow.insertCell();
+                        var newText = document.createTextNode(data1[0][i]['doc_no']);
+                        newCell.appendChild(newText);
+
+                        var newCell = newRow.insertCell();
+                        var newText = document.createTextNode(data1[0][i]['charge']);
+                        newCell.appendChild(newText);
+
+                        var newCell = newRow.insertCell();
+                        var newText = document.createTextNode(data1[0][i]['customer']);
+                        newCell.appendChild(newText);
+
+                        var newCell = newRow.insertCell();
+                        var newText = document.createTextNode(data1[0][i]['amount']);
+                        newCell.appendChild(newText);
+                        console.log('end');
+                    }
+
+                }
+            }
+        }
+
+
+    </script>
+
+    <script src="{{url_for('static',filename='jquery/jquery.min.js')}}"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="{{url_for('static',filename='jquery-ui/jquery-ui.min.js')}}"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+        $.widget.bridge('uibutton', $.ui.button)
+    </script>
+    <!-- Bootstrap 4 -->
+    <script src="{{url_for('static',filename='bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <!-- ChartJS -->
+    <script src="{{url_for('static',filename='chart.js/Chart.min.js')}}"></script>
+    <!-- Sparkline -->
+    <script src="{{url_for('static',filename='sparklines/sparkline.js')}}"></script>
+    <!-- JQVMap -->
+    <script src="{{url_for('static',filename='jqvmap/jquery.vmap.min.js')}}"></script>
+    <script src="{{url_for('static',filename='jqvmap/maps/jquery.vmap.world.js')}}"></script>
+    <!-- jQuery Knob Chart -->
+    <script src="{{url_for('static',filename='jquery-knob/jquery.knob.min.js')}}"></script>
+    <!-- daterangepicker -->
+    <script src="{{url_for('static',filename='moment/moment.min.js')}}"></script>
+    <script src="{{url_for('static',filename='daterangepicker/daterangepicker.js')}}"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script
+        src="{{url_for('static',filename='tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+    <!-- Summernote -->
+    <script src="{{url_for('static',filename='summernote/summernote-bs4.min.js')}}"></script>
+    <!-- overlayScrollbars -->
+    <script src="{{url_for('static',filename='overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
+    <!-- AdminLTE App -->
+    <script src="{{url_for('static',filename='js/adminlte.js')}}"></script>
+    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+    <script src="{{url_for('static',filename='js/pages/dashboard.js')}}"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="{{url_for('static',filename='js/demo.js')}}"></script>
+
+    <!-- Bootstrap 4 -->
+    <!-- Select2 -->
+    <script src="{{url_for('static',filename='select2/js/select2.full.min.js')}}"></script>
+    <!-- Bootstrap4 Duallistbox -->
+    <script src="{{url_for('static',filename='inputmask/jquery.inputmask.bundle.js')}}"></script>
+    <script src="{{url_for('static',filename='bootstrap-colorpicker/js/bootstrap-colorpicker.min.js')}}"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="{{url_for('static',filename='datatables/jquery.dataTables.js')}}"></script>
+    <script src="{{url_for('static',filename='datatables-bs4/js/dataTables.bootstrap4.js')}}"></script>
+    <!-- page script -->
+
+    <script>
+        $(function () {
+            $('#example1').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+            });
+
+        });
+    </script>
+
+
+    <script>
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2({
+                theme: 'bootstrap4'
+            })
+
+            //Datemask dd/mm/yyyy
+            $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+            //Datemask2 mm/dd/yyyy
+            $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+            //Money Euro
+            $('[data-mask]').inputmask()
+
+            //Date range picker
+            $('#reservation').daterangepicker()
+            //Date range picker with time picker
+            $('#reservationtime').daterangepicker({
+                timePicker: true,
+                timePickerIncrement: 30,
+                locale: {
+                    format: 'MM/DD/YYYY hh:mm A'
+                }
+            })
+            //Date range as a button
+            $('#daterange-btn').daterangepicker(
+                {
+                    ranges: {
+                        'Today': [moment(), moment()],
+                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    },
+                    startDate: moment().subtract(29, 'days'),
+                    endDate: moment()
+                },
+                function (start, end) {
+                    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+                }
+            )
+
+            //Timepicker
+            $('#timepicker').datetimepicker({
+                format: 'LT'
+            })
+
+            //Bootstrap Duallistbox
+            $('.duallistbox').bootstrapDualListbox()
+
+            //Colorpicker
+            $('.my-colorpicker1').colorpicker()
+            //color picker with addon
+            $('.my-colorpicker2').colorpicker()
+
+            $('.my-colorpicker2').on('colorpickerChange', function (event) {
+                $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
+            });
+        })
+    </script>
+
+    <script>
+        var acdonutChartCanvas = $('#donutChart').get(0).getContext('2d')
+        var donutData = {
+            labels: [
+                'Completed',
+                'Assigned',
+
+            ],
+            datasets: [
+                {
+                    data: [10, 5],
+                    backgroundColor: ['#f56954', '#00a65a'],
+                }
+            ]
+        }
+        var donutOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+        }
+        //Create pie or douhnut chart
+        // You can switch between pie and douhnut using the method below.
+        var donutChart = new Chart(acdonutChartCanvas, {
+            type: 'doughnut',
+            data: donutData,
+            options: donutOptions
+        })
+
+
+    </script>
+
+    <script>
+        var ocdonutChartCanvas = $('#ocdonutChart').get(0).getContext('2d')
+        var donutData = {
+            labels: [
+                'Open',
+                'Closed',
+            ],
+            datasets: [
+                {
+                    data: [5, 10],
+                    backgroundColor: ['#C7D0E0', '#4A7AB2'],
+                }
+            ]
+        }
+        var donutOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+        }
+        //Create pie or douhnut chart
+        // You can switch between pie and douhnut using the method below.
+        var donutChart = new Chart(ocdonutChartCanvas, {
+            type: 'doughnut',
+            data: donutData,
+            options: donutOptions
+        })
+
+    </script>
+    <script>
+
+        var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d');
+        var stackedBarChartData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept',
+                'Oct', 'Nov', 'Dec'
+            ],
+            datasets: [
+                {
+                    label: 'Sale',
+                    backgroundColor: 'rgba(60,141,188,0.9)',
+                    borderColor: 'rgba(60,141,188,0.8)',
+                    pointRadius: false,
+                    pointColor: '#3b8bba',
+                    pointStrokeColor: 'rgba(60,141,188,1)',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data: [28, 48, 40, 19, 86, 27, 90, 10, 20, 5]
+                },
+                {
+                    label: 'Payment',
+                    backgroundColor: 'rgba(210, 214, 222, 1)',
+                    borderColor: 'rgba(210, 214, 222, 1)',
+                    pointRadius: false,
+                    pointColor: 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data: [65, 59, 80, 81, 56, 55, 40, 10, 11, 5]
+                },
+                {
+                    label: 'Reciept',
+                    backgroundColor: 'rgb(255, 193, 7)',
+                    borderColor: 'rgba(210, 214, 222, 1)',
+                    pointRadius: false,
+                    pointColor: 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data: [65, 59, 80, 81, 56, 55, 40, 10, 20, 10]
+                },
+                {
+                    label: 'Guest',
+                    backgroundColor: 'rgb(220, 53, 69)',
+                    borderColor: 'rgba(210, 214, 222, 1)',
+                    pointRadius: false,
+                    pointColor: 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data: [65, 59, 80, 81, 56, 55, 40, 10, 11, 5]
+                }
+            ],
+        }
+        var stackedBarChartOptions = {
+
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        }
+
+        var stackedBarChart = new Chart(stackedBarChartCanvas, {
+            type: 'bar',
+            data: stackedBarChartData,
+            options: stackedBarChartOptions
+        })
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+<div class="modal fade" id="modal-assign">
+    <div class="modal-dialog">
+        <div class="modal-content bg-orange">
+            <div class="modal-header">
+                <h4 class="modal-title">Assign | Order</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <!-- text input -->
+                        <div class="form-group">
+                            <label>Assign selected order to:</label>
+                            <select class="custom-select" style="width: 100%;" id="employee-select">
+                                <option>Choose Employee</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-right">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+                    <a id="btnOK" class="btn btn-outline-light" onclick="setAssignedTo(recid);">OK</a>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>

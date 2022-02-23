@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roles</title>
+  
+    {% include "styles.html" %}
+
+</head>
+
+<body class="sidebar-mini layout-fixed control-sidebar-open" style="height: auto;" onload="displayTable();">
+    <div class="wrapper">
+
+        <!-- Navbar -->
+        {% include "navbar.html" %}
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar elevation-4 sidebar-light-info">
+            <!-- Brand Logo -->
+            <a href="#" class="brand-link navbar-info">
+                <img src="{{ url_for('static', filename='images/logo.png')}}" alt="Logo"
+                    class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light text-white">Mineral Water MS</span>
+            </a>
+
+            <!-- Sidebar -->
+            {% include "sidebar.html" %}
+            <!-- /.sidebar -->
+        </aside>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper" style="min-height: 725px;">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0 text-dark">Roles</h1>
+                        </div><!-- /.col -->
+
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+            <!-- Main content -->
+            <section class="content">
+                <div class="row">
+                    <div class="col-12">
+
+                        <div class="card">
+
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped " id="example1">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Description</th>
+                                                <th>Permission Remarks</th>
+                                                <th>Active</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </section>
+            <!-- /.content -->
+        </div>
+            <!-- /.content-wrapper -->
+        <!-- Footer -->
+        {% include "footer.html" %}
+    </div>
+        <!-- Logout Dialog -->
+        {% include "modal_logout.html" %}
+
+
+
+    <!-- Functionality-->
+    <script>
+        function displayTable() {
+            let xhttp = new XMLHttpRequest();
+            xhttp.open("GET", '/getRoles');
+            xhttp.send()
+            xhttp.onreadystatechange = function () {
+                if (xhttp.readyState == 4 && xhttp.status == 200) {
+
+                    var response1 = xhttp.responseText;
+                    console.log(response1)
+                    var data1 = JSON.parse(response1)
+                    let count = data1[1];
+                    console.log(data1[0][0])
+                    console.log(data1[0][1])
+                    console.log(data1[0][2])
+
+                    var tbodyRef = document.getElementById('example1').getElementsByTagName('tbody')[0];
+                    tbodyRef.innerHTML = " ";
+                    for (var i = 0; i < count; i++) {
+                        var newRow = tbodyRef.insertRow();
+
+                        var newCell = newRow.insertCell();
+                        var newText = document.createTextNode(data1[0][i]['role_id']);
+                        newCell.appendChild(newText);
+
+                        var newCell = newRow.insertCell();
+                        var newText = document.createTextNode(data1[0][i]['description']);
+                        newCell.appendChild(newText);
+
+                        var newCell = newRow.insertCell();
+                        var newText = document.createTextNode(data1[0][i]['permission_remarks']);
+                        newCell.appendChild(newText);
+
+                        var newCell = newRow.insertCell();
+                        var block_to_insert = document.createElement('div');
+                        block_to_insert.classList.add('icheck-primary', 'd-inline', 'ml-2');
+                        var input = document.createElement("input");
+                        input.setAttribute('type', 'checkbox');
+                        if (data1[0][i]['active'] == '1') {
+                            input.checked = true;
+                        }
+                        else {
+                            input.checked = false;
+                        }
+                        input.setAttribute("disabled", true);
+                        var tblblock = block_to_insert.appendChild(input);
+                        newCell.appendChild(tblblock);
+
+                        console.log('end');
+                    }
+
+                }
+            }
+        }
+
+    </script>
+
+    <!--Common Js-->
+    {% include "commonjs.html" %}
+
+    <!-- page script -->
+
+    <script>
+        $(function () {
+            $('#example1').DataTable({
+                "paging": false,
+                "lengthChange": true,
+                "searching": false,
+                "ordering": false,
+                "info": false,
+                "autoWidth": false,
+            });
+
+        });
+    </script>
+
+
+    <script>
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2({
+                theme: 'bootstrap4'
+            })
+
+            //Datemask dd/mm/yyyy
+            $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+            //Datemask2 mm/dd/yyyy
+            $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+            //Money Euro
+            $('[data-mask]').inputmask()
+
+            //Date range picker
+            $('#reservation').daterangepicker()
+            //Date range picker with time picker
+            $('#reservationtime').daterangepicker({
+                timePicker: true,
+                timePickerIncrement: 30,
+                locale: {
+                    format: 'MM/DD/YYYY hh:mm A'
+                }
+            })
+            //Date range as a button
+            $('#daterange-btn').daterangepicker(
+                {
+                    ranges: {
+                        'Today': [moment(), moment()],
+                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    },
+                    startDate: moment().subtract(29, 'days'),
+                    endDate: moment()
+                },
+                function (start, end) {
+                    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+                }
+            )
+
+            //Timepicker
+            $('#timepicker').datetimepicker({
+                format: 'LT'
+            })
+
+            //Bootstrap Duallistbox
+            $('.duallistbox').bootstrapDualListbox()
+
+            //Colorpicker
+            $('.my-colorpicker1').colorpicker()
+            //color picker with addon
+            $('.my-colorpicker2').colorpicker()
+
+            $('.my-colorpicker2').on('colorpickerChange', function (event) {
+                $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
+            });
+        })
+    </script>
+
+    <script>
+        var acdonutChartCanvas = $('#donutChart').get(0).getContext('2d')
+        var donutData = {
+            labels: [
+                'Completed',
+                'Assigned',
+
+            ],
+            datasets: [
+                {
+                    data: [10, 5],
+                    backgroundColor: ['#f56954', '#00a65a'],
+                }
+            ]
+        }
+        var donutOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+        }
+        //Create pie or douhnut chart
+        // You can switch between pie and douhnut using the method below.
+        var donutChart = new Chart(acdonutChartCanvas, {
+            type: 'doughnut',
+            data: donutData,
+            options: donutOptions
+        })
+
+
+    </script>
+
+    <script>
+        var ocdonutChartCanvas = $('#ocdonutChart').get(0).getContext('2d')
+        var donutData = {
+            labels: [
+                'Open',
+                'Closed',
+            ],
+            datasets: [
+                {
+                    data: [5, 10],
+                    backgroundColor: ['#C7D0E0', '#4A7AB2'],
+                }
+            ]
+        }
+        var donutOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+        }
+        //Create pie or douhnut chart
+        // You can switch between pie and douhnut using the method below.
+        var donutChart = new Chart(ocdonutChartCanvas, {
+            type: 'doughnut',
+            data: donutData,
+            options: donutOptions
+        })
+
+    </script>
+    <script>
+
+        var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d');
+        var stackedBarChartData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept',
+                'Oct', 'Nov', 'Dec'
+            ],
+            datasets: [
+                {
+                    label: 'Sale',
+                    backgroundColor: 'rgba(60,141,188,0.9)',
+                    borderColor: 'rgba(60,141,188,0.8)',
+                    pointRadius: false,
+                    pointColor: '#3b8bba',
+                    pointStrokeColor: 'rgba(60,141,188,1)',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data: [28, 48, 40, 19, 86, 27, 90, 10, 20, 5]
+                },
+                {
+                    label: 'Payment',
+                    backgroundColor: 'rgba(210, 214, 222, 1)',
+                    borderColor: 'rgba(210, 214, 222, 1)',
+                    pointRadius: false,
+                    pointColor: 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data: [65, 59, 80, 81, 56, 55, 40, 10, 11, 5]
+                },
+                {
+                    label: 'Reciept',
+                    backgroundColor: 'rgb(255, 193, 7)',
+                    borderColor: 'rgba(210, 214, 222, 1)',
+                    pointRadius: false,
+                    pointColor: 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data: [65, 59, 80, 81, 56, 55, 40, 10, 20, 10]
+                },
+                {
+                    label: 'Guest',
+                    backgroundColor: 'rgb(220, 53, 69)',
+                    borderColor: 'rgba(210, 214, 222, 1)',
+                    pointRadius: false,
+                    pointColor: 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data: [65, 59, 80, 81, 56, 55, 40, 10, 11, 5]
+                }
+            ],
+        }
+        var stackedBarChartOptions = {
+
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        }
+
+        var stackedBarChart = new Chart(stackedBarChartCanvas, {
+            type: 'bar',
+            data: stackedBarChartData,
+            options: stackedBarChartOptions
+        })
+
+    </script>
+</body>
+
+</html>

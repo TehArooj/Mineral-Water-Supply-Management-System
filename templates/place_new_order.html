@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Order</title>
+    {% include "styles.html" %}
+
+</head>
+
+<body class="sidebar-mini layout-fixed control-sidebar-open" style="height: auto;"
+      onload="displayCustomersOptions(); getoptions(); ">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    {% include "navbar.html" %}>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar elevation-4 sidebar-light-info">
+        <!-- Brand Logo -->
+        <a href="#" class="brand-link navbar-info">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo"
+                 class="brand-image img-circle elevation-3" style="opacity: .8">
+            <span class="brand-text font-weight-light text-white">Mineral Water MS</span>
+        </a>
+
+        <!-- Sidebar -->
+        {% include "sidebar.html" %}
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" style="min-height: 725px;">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0 text-dark">New Order</h1>
+                    </div><!-- /.col -->
+
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <!-- /.row -->
+                <!-- Main row -->
+                <div class="row">
+                    <!-- Left col -->
+                    <section class="container-fluid">
+                        <!-- Custom tabs (Charts with tabs)-->
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Order Details</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <form role="form">
+                                    <div class="row">
+
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label>Order Date </label>
+                                                <input type="date" class="form-control" placeholder=""
+                                                       id="order-date">
+                                            </div>
+                                            <!-- text input -->
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <!-- text input -->
+                                            <div class="form-group">
+
+                                                <label>Customer</label>
+                                                <select class="custom-select" name="choose customer"
+                                                        id="customer-select" style="width: 100%;">
+                                                    <option>choose customer</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <!-- text input -->
+                                            <div class="form-group">
+                                                <label>Product </label>
+                                                <select class="custom-select" style="width: 100%;" id="size-select"
+                                                        onchange="showRate();">
+                                                    <option>Choose Product</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <!-- text input -->
+                                            <div class="form-group">
+                                                <label>Rate</label>
+                                                <input class="form-control" type="text" name="" id="rate" disabled
+                                                       onchange="calcAmount();">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <!-- text input -->
+                                            <div class="form-group">
+                                                <label>Quantity</label>
+                                                <input class="form-control" type="text" name="" id="quantity"
+                                                       onchange="calcAmount();">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>Amount</label>
+                                                <input class="form-control" type="text" name="" id="amount"
+                                                       disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <!-- text input -->
+                                            <div class="form-group">
+                                                <label>Delivery On</label>
+                                                <input class="form-control" type="date" name="" id="Delivery-On">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <!-- text input -->
+                                            <div class="form-group">
+                                                <label>Delivery Address</label>
+                                                <input class="form-control" type="text" name=""
+                                                       id="Delivery-Address">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="container-fluid">
+                                            <!-- text input -->
+                                            <div class="form-group">
+                                                <label>Remarks</label>
+                                                <textarea style="resize: none;" class="form-control" rows="6"
+                                                          placeholder="" id="Remarks"></textarea>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="container-fluid">
+                                            <!-- text input -->
+                                            <div class="form-group">
+                                                <button type="button" id="addNewOrder-button"
+                                                        onclick="Admin_addNewOrder();"
+                                                        class="btn btn-success float-right"><i
+                                                        class="far fa-plus-square"></i>
+                                                    &nbsp;&nbsp;Add Order
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </section>
+                    <!-- /.Left col -->
+                </div>
+                <!-- /.row (main row) -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- Main content -->
+
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- Footer -->
+    {% include "footer.html" %}
+</div>
+<!-- Logout Dialog -->
+{% include "modal_logout.html" %}
+
+
+<!--Common Js-->
+{% include "commonjs.html" %}
+
+
+<!--Functionality-->
+<script>
+    function displayCustomersOptions() {
+        document.getElementById('customer-select').innerHTML = ""
+        var select_id = document.getElementById('customer-select')
+        myOption = document.createElement("option");
+        myOption.text = "Choose customer";
+        myOption.value = " ";
+        select_id.appendChild(myOption);
+
+        let xhttp = new XMLHttpRequest();
+        console.log("inside display customer option func in js ")
+        xhttp.open("POST", '/displayCustomersOptions', true);
+        xhttp.send();
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response1 = xhttp.responseText;
+                console.log("option we got for cust-email are:")
+                console.log(response1)
+                var data1 = JSON.parse(response1)
+                let count = data1[1];
+
+                for (var i = 0; i < count; i++) {
+                    var opt = document.createElement('option');
+                    opt.appendChild(document.createTextNode(data1[0][i]['email']));
+                    opt.value = data1[0][i]['email'];
+                    console.log("testtttinggg")
+                    select_id.appendChild(opt);
+                }
+
+            }
+        }
+    }
+
+    function getoptions() {
+        document.getElementById('size-select').innerHTML = ""
+        var s_id = document.getElementById('size-select')
+        myOption = document.createElement("option");
+        myOption.text = "Select product";
+        myOption.value = " ";
+        s_id.appendChild(myOption);
+        let xhttp = new XMLHttpRequest();
+        console.log("inside setoption func in js ")
+        xhttp.open("POST", '/setOptions_toGet_ProductName', true);
+        xhttp.send();
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response1 = xhttp.responseText;
+                console.log("fixxaaaa")
+                console.log(response1)
+                var data1 = JSON.parse(response1)
+                let count = data1[1];
+                console.log("kuch bii++")
+                console.log(data1[0][0])
+                for (var i = 0; i < count; i++) {
+                    var opt = document.createElement('option');
+                    console.log("ooooptions:")
+                    console.log(data1[0][i])
+                    opt.appendChild(document.createTextNode(data1[0][i]['full-name']));
+                    //opt.value = data1[0][i];
+                    s_id.appendChild(opt);
+                }
+
+            }
+        }
+    }
+
+    function showRate() {
+        console.log("in showrate function")
+        let seleted_size = document.getElementById("size-select").value
+        console.log(seleted_size)
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("POST", '/showRate', true);
+        xhttp.send(JSON.stringify(seleted_size));
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response1 = xhttp.responseText;
+                console.log("response in showrate: ")
+                console.log(response1)
+                var data = JSON.parse(response1)
+                document.getElementById("rate").value = data["rate"]
+
+            }
+        }
+    }
+
+    function calcAmount() {
+        let rate = document.getElementById("rate").value;
+        let quantity = document.getElementById("quantity").value;
+        let elamount = document.getElementById("amount");
+
+        let ttlAmount = parseInt(rate) * parseInt(quantity);
+        elamount.value = ttlAmount.toString();
+    }
+
+    function Admin_addNewOrder() {
+
+        let orderDate = document.getElementById("order-date").value
+        let customerEmail = document.getElementById("customer-select").value
+        let productSize = document.getElementById("size-select").value
+        let rate = document.getElementById("rate").value
+        let quantity = document.getElementById("quantity").value
+        let amount = document.getElementById("amount").value
+        let deliveryON = document.getElementById("Delivery-On").value
+        let deliveryAddress = document.getElementById("Delivery-Address").value
+        let remarks = document.getElementById("Remarks").value
+
+        if (orderDate.length == 0 || customerEmail.length == 0 || productSize.length == 0 || rate.length == 0 || quantity.length == 0 || deliveryON.length == 0 || deliveryAddress.length == 0) {
+            Swal.fire({
+                position: 'top-end',
+                type: ("warning"),
+                text: "Please fill/choose all fields",
+                showConfirmButton: false,
+                timer: 2000
+            }).then(function () {
+                return;
+            });
+
+        }
+        if (parseInt(quantity) == 0) {
+            Swal.fire({
+                position: 'top-end',
+                type: ("warning"),
+                text: "Please enter valid quantity. Quantity must be 1 or more than 1",
+                showConfirmButton: false,
+                timer: 2000
+            }).then(function () {
+                return;
+            });
+
+        }
+        console.log(orderDate, " ", customerEmail, " ", productSize, " ", rate, " ", quantity, " ", amount, " ", deliveryON, " ", deliveryAddress, " ", remarks)
+        let order_Details = {
+            orderDate: orderDate,
+            customerEmail: customerEmail,
+            productSize: productSize,
+            rate: rate,
+            quantity: quantity,
+            amount: amount,
+            deliveryON: deliveryON,
+            deliveryAddress: deliveryAddress,
+            remarks: remarks
+        }
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("POST", '/admin_newOrder', true);
+        xhttp.send(JSON.stringify(order_Details))
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                var response = xhttp.responseText;
+                var data = JSON.parse(response)
+                if (data == true) {
+                    Swal.fire({
+                        position: 'top-end',
+                        type: ("success"),
+                        text: "New Order placed succesfully",
+                        showConfirmButton: false,
+                        timer: 2000
+                    }).then(function () {
+                        resetForm();
+                    });
+                }
+            }
+        }
+    }
+
+    function resetForm() {
+
+        document.getElementById("order-date").value = '';
+        document.getElementById("customer-select").value = '';
+        document.getElementById("size-select").value = '';
+        document.getElementById("rate").value = '';
+        document.getElementById("quantity").value = '';
+        document.getElementById("amount").value = '';
+        document.getElementById("Delivery-On").value = '';
+        document.getElementById("Delivery-Address").value = '';
+        document.getElementById("Remarks").value = '';
+
+    }
+</script>
+
+
+<!-- page script -->
+
+<script>
+    $(function () {
+        $('#example1').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+        });
+
+    });
+</script>
+
+
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2({
+            theme: 'bootstrap4'
+        })
+
+        //Datemask dd/mm/yyyy
+        $('#datemask').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/yyyy'})
+        //Datemask2 mm/dd/yyyy
+        $('#datemask2').inputmask('mm/dd/yyyy', {'placeholder': 'mm/dd/yyyy'})
+        //Money Euro
+        $('[data-mask]').inputmask()
+
+        //Date range picker
+        $('#reservation').daterangepicker()
+        //Date range picker with time picker
+        $('#reservationtime').daterangepicker({
+            timePicker: true,
+            timePickerIncrement: 30,
+            locale: {
+                format: 'MM/DD/YYYY hh:mm A'
+            }
+        })
+        //Date range as a button
+        $('#daterange-btn').daterangepicker(
+            {
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                startDate: moment().subtract(29, 'days'),
+                endDate: moment()
+            },
+            function (start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+            }
+        )
+
+        //Timepicker
+        $('#timepicker').datetimepicker({
+            format: 'LT'
+        })
+
+        //Bootstrap Duallistbox
+        $('.duallistbox').bootstrapDualListbox()
+
+        //Colorpicker
+        $('.my-colorpicker1').colorpicker()
+        //color picker with addon
+        $('.my-colorpicker2').colorpicker()
+
+        $('.my-colorpicker2').on('colorpickerChange', function (event) {
+            $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
+        });
+    })
+</script>
+
+<script>
+    var acdonutChartCanvas = $('#donutChart').get(0).getContext('2d')
+    var donutData = {
+        labels: [
+            'Completed',
+            'Assigned',
+
+        ],
+        datasets: [
+            {
+                data: [10, 5],
+                backgroundColor: ['#f56954', '#00a65a'],
+            }
+        ]
+    }
+    var donutOptions = {
+        maintainAspectRatio: false,
+        responsive: true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    var donutChart = new Chart(acdonutChartCanvas, {
+        type: 'doughnut',
+        data: donutData,
+        options: donutOptions
+    })
+
+
+</script>
+
+<script>
+    var ocdonutChartCanvas = $('#ocdonutChart').get(0).getContext('2d')
+    var donutData = {
+        labels: [
+            'Open',
+            'Closed',
+        ],
+        datasets: [
+            {
+                data: [5, 10],
+                backgroundColor: ['#C7D0E0', '#4A7AB2'],
+            }
+        ]
+    }
+    var donutOptions = {
+        maintainAspectRatio: false,
+        responsive: true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    var donutChart = new Chart(ocdonutChartCanvas, {
+        type: 'doughnut',
+        data: donutData,
+        options: donutOptions
+    })
+
+</script>
+<script>
+
+    var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d');
+    var stackedBarChartData = {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept',
+            'Oct', 'Nov', 'Dec'
+        ],
+        datasets: [
+            {
+                label: 'Sale',
+                backgroundColor: 'rgba(60,141,188,0.9)',
+                borderColor: 'rgba(60,141,188,0.8)',
+                pointRadius: false,
+                pointColor: '#3b8bba',
+                pointStrokeColor: 'rgba(60,141,188,1)',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(60,141,188,1)',
+                data: [28, 48, 40, 19, 86, 27, 90, 10, 20, 5]
+            },
+            {
+                label: 'Payment',
+                backgroundColor: 'rgba(210, 214, 222, 1)',
+                borderColor: 'rgba(210, 214, 222, 1)',
+                pointRadius: false,
+                pointColor: 'rgba(210, 214, 222, 1)',
+                pointStrokeColor: '#c1c7d1',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(220,220,220,1)',
+                data: [65, 59, 80, 81, 56, 55, 40, 10, 11, 5]
+            },
+            {
+                label: 'Reciept',
+                backgroundColor: 'rgb(255, 193, 7)',
+                borderColor: 'rgba(210, 214, 222, 1)',
+                pointRadius: false,
+                pointColor: 'rgba(210, 214, 222, 1)',
+                pointStrokeColor: '#c1c7d1',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(220,220,220,1)',
+                data: [65, 59, 80, 81, 56, 55, 40, 10, 20, 10]
+            },
+            {
+                label: 'Guest',
+                backgroundColor: 'rgb(220, 53, 69)',
+                borderColor: 'rgba(210, 214, 222, 1)',
+                pointRadius: false,
+                pointColor: 'rgba(210, 214, 222, 1)',
+                pointStrokeColor: '#c1c7d1',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(220,220,220,1)',
+                data: [65, 59, 80, 81, 56, 55, 40, 10, 11, 5]
+            }
+        ],
+    }
+    var stackedBarChartOptions = {
+
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+
+    var stackedBarChart = new Chart(stackedBarChartCanvas, {
+        type: 'bar',
+        data: stackedBarChartData,
+        options: stackedBarChartOptions
+    })
+
+</script>
+
+</body>
+
+</html>

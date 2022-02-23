@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>My Profile</title>
+
+  {% include "styles.html" %}
+
+
+
+</head>
+
+
+<body class="sidebar-mini layout-fixed control-sidebar-open" style="height: auto;" onload="logedIn_cust_data();">
+  <div class="wrapper">
+
+    <!-- Navbar -->
+    {% include "navbar.html" %}
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar elevation-4 sidebar-light-info">
+      <!-- Brand Logo -->
+      <a href="#" class="brand-link navbar-info">
+        <img src="{{ url_for('static', filename='images/logo.png')}}" alt="AdminLTE Logo"
+          class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light text-white">Mineral Water MS</span>
+      </a>
+
+      <!-- Sidebar -->
+      <div
+        class="sidebar os-host os-theme-light os-host-overflow os-host-overflow-y os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-transition">
+        <div class="os-resize-observer-host">
+          <div class="os-resize-observer observed" style="left: 0px; right: auto;"></div>
+        </div>
+        <div class="os-size-auto-observer" style="height: calc(100% + 1px); float: left;">
+          <div class="os-resize-observer observed"></div>
+        </div>
+        <div class="os-content-glue" style="margin: 0px -8px;"></div>
+        <div class="os-padding">
+          <div class="os-viewport os-viewport-native-scrollbars-invisible"
+            style="overflow-y: scroll; right: 0px; bottom: 0px;">
+            <div class="os-content" style="padding: 0px 8px; height: 100%; width: 100%;">
+              <!-- Sidebar user panel (optional) -->
+              <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="image">
+                  <img src="{{ url_for('static',filename='images/avatar5.png') }}" class="img-circle elevation-2"
+                    alt="User Image">
+                </div>
+                <div class="info">
+                  <a href="#" class="d-block">Guest
+                    <span class="float-right badge bg-success ml-4 mt-1">Online</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Sidebar Menu -->
+              <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                  data-accordion="false">
+                  <!-- Add icons to the links using the .nav-icon class
+                 with font-awesome or any other icon font library -->
+                  <li class="nav-item has-treeview menu-open  pb-3">
+                    <a href="/custDashboard" class="nav-link">
+                      <i class="nav-icon fas fa-home"></i>
+                      <p>
+                        Order
+                      </p>
+                    </a>
+                  </li>
+                  <li class="nav-item has-treeview pb-3">
+                    <a href="/custProfile" class="nav-link active">
+                      <i class="nav-icon fas fa-user"></i>
+                      <p>
+                        My Profile
+                      </p>
+                    </a>
+                  </li>
+
+                  <li class="nav-item has-treeview ">
+                    <a href="/logout" class="nav-link">
+                      <i class="nav-icon fas fa-sign-out-alt"></i>
+                      <p>
+                        LOGOUT
+                      </p>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+              <!-- /.sidebar-menu -->
+            </div>
+          </div>
+        </div>
+        <div class="os-scrollbar os-scrollbar-horizontal os-scrollbar-unusable os-scrollbar-auto-hidden">
+          <div class="os-scrollbar-track">
+            <div class="os-scrollbar-handle" style="width: 100%; transform: translate(0px, 0px);"></div>
+          </div>
+        </div>
+        <div class="os-scrollbar os-scrollbar-vertical os-scrollbar-auto-hidden">
+          <div class="os-scrollbar-track">
+            <div class="os-scrollbar-handle" style="height: 73.8117%; transform: translate(0px, 0px);"></div>
+          </div>
+        </div>
+        <div class="os-scrollbar-corner"></div>
+      </div>
+      <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" style="min-height: 725px;">
+      <!-- Content Header (Page header) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-dark">My Profile</h1>
+            </div><!-- /.col -->
+
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="container-fluid">
+          <!-- /.row -->
+          <!-- Main row -->
+          <div class="row">
+            <!-- Left col -->
+            <section class="container-fluid">
+              <!-- Custom tabs (Charts with tabs)-->
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Details</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                  <form role="form">
+                    <div class="row">
+                      <div class="col">
+                        <!-- text input -->
+                        <div class="form-group">
+                          <label>Email</label>
+                          <input type="text" class="form-control" id="usr_name" value="{{ email }}" disabled>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <!-- text input -->
+                        <div class="form-group">
+                          <label>Full Name</label>
+                          <input type="text" class="form-control" value="" id="full-name">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <!-- text input -->
+                        <div class="form-group">
+                          <label>CNIC</label>
+                          <input type="text" class="form-control" value="" id="cnic">
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <!-- text input -->
+                        <div class="form-group">
+                          <label>Phone No</label>
+                          <input type="text" class="form-control" value="" id="ph_no">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <!-- text input -->
+                        <div class="form-group">
+                          <label>Address</label>
+                          <input type="text" class="form-control" value="" id="address">
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <!-- text input -->
+                        <div class="form-group">
+                          <label>Delivery Address</label>
+                          <input type="text" class="form-control" value="" id="delivery-at">
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <!-- text input -->
+                        <div class="form-group clearfix ">
+                          <div class="icheck-primary d-inline">
+                            <input type="checkbox" id="checkboxPrimary1" checked disabled>
+                            <label for="checkboxPrimary1">
+                              Active
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+                      <div class="container-fluid">
+                        <!-- text input -->
+                        <div class="form-group">
+                          <button type="button" class="btn btn-success float-right" onclick="updateCustPofile();"><i
+                              class="far fa-plus-square"></i>
+                            &nbsp;&nbsp;Update
+                          </button>
+                        </div>
+                      </div>
+
+                    </div>
+                  </form>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </section>
+            <!-- /.Left col -->
+          </div>
+          <!-- /.row (main row) -->
+        </div><!-- /.container-fluid -->
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- Footer -->
+    {% include "footer.html" %}
+  </div>
+  <!-- Logout Dialog -->
+  {% include "modal_logout.html" %}
+
+
+  <script>
+    function logedIn_cust_data() {
+      console.log("hello from body")
+      var em = document.getElementById("usr_name").value
+      console.log(em)
+      let xhttp = new XMLHttpRequest();
+      xhttp.open("POST", '/get_loggedIn_userData', true);
+      xhttp.send(JSON.stringify(em))
+      xhttp.onreadystatechange = function () {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+          var response1 = xhttp.responseText;
+          var data1 = JSON.parse(response1)
+          console.log("yello agaya db se data")
+          console.log(data1)
+          console.log(data1['name'])
+          document.getElementById("full-name").value = data1['name']
+          document.getElementById("cnic").value = data1['cnic']
+          document.getElementById("ph_no").value = data1['phone_no']
+          document.getElementById("address").value = data1['address']
+          document.getElementById("delivery-at").value = data1['delivery_at']
+
+
+        }
+      }
+    }
+
+    function updateCustPofile() {
+      console.log("hello im in update Cust Pofile js function")
+      let email = document.getElementById("usr_name").value
+      let full_name = document.getElementById("full-name").value
+      let cnic = document.getElementById("cnic").value
+      let ph_no = document.getElementById("ph_no").value
+      let address = document.getElementById("address").value
+      let deliverAt = document.getElementById("delivery-at").value
+      console.log("here is what u want to update: " + email + " " + full_name + " " + cnic + " " + ph_no + " " + address + " " + deliverAt)
+      let updatedProfileInfo = {
+        email: email,
+        fullName: full_name,
+        cnic: cnic,
+        ph_no: ph_no,
+        address: address,
+        deliverAt: deliverAt
+      }
+      let xhttp = new XMLHttpRequest();
+      xhttp.open("POST", '/updateCustPofile', true);
+      xhttp.send(JSON.stringify(updatedProfileInfo))
+      xhttp.onreadystatechange = function () {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+          var response = xhttp.responseText;
+          var data = JSON.parse(response)
+          if (data == true) {
+            Swal.fire({
+              position: 'top-end',
+              type: ("success"),
+              text: "Your profile has been succesfully updated",
+              showConfirmButton: false,
+              timer: 1500
+            }).then(function () {
+              location.reload();
+            });
+
+          }
+        }
+        else {
+          console.log("Waiting for Response")
+        }
+      }
+      // location.reload();
+    }
+
+  </script>
+  <!--Common Js-->
+  {% include "commonjs.html" %}
+  <!-- page script -->
+
+  <script>
+    $(function () {
+      $('#example1').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+      });
+
+    });
+  </script>
+
+
+  <script>
+    $(function () {
+      //Initialize Select2 Elements
+      $('.select2').select2({
+        theme: 'bootstrap4'
+      })
+
+      //Datemask dd/mm/yyyy
+      $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+      //Datemask2 mm/dd/yyyy
+      $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+      //Money Euro
+      $('[data-mask]').inputmask()
+
+      //Date range picker
+      $('#reservation').daterangepicker()
+      //Date range picker with time picker
+      $('#reservationtime').daterangepicker({
+        timePicker: true,
+        timePickerIncrement: 30,
+        locale: {
+          format: 'MM/DD/YYYY hh:mm A'
+        }
+      })
+      //Date range as a button
+      $('#daterange-btn').daterangepicker(
+        {
+          ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          },
+          startDate: moment().subtract(29, 'days'),
+          endDate: moment()
+        },
+        function (start, end) {
+          $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+        }
+      )
+
+      //Timepicker
+      $('#timepicker').datetimepicker({
+        format: 'LT'
+      })
+
+      //Bootstrap Duallistbox
+      $('.duallistbox').bootstrapDualListbox()
+
+      //Colorpicker
+      $('.my-colorpicker1').colorpicker()
+      //color picker with addon
+      $('.my-colorpicker2').colorpicker()
+
+      $('.my-colorpicker2').on('colorpickerChange', function (event) {
+        $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
+      });
+    })
+  </script>
+
+  <script>
+    var acdonutChartCanvas = $('#donutChart').get(0).getContext('2d')
+    var donutData = {
+      labels: [
+        'Completed',
+        'Assigned',
+
+      ],
+      datasets: [
+        {
+          data: [10, 5],
+          backgroundColor: ['#f56954', '#00a65a'],
+        }
+      ]
+    }
+    var donutOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    var donutChart = new Chart(acdonutChartCanvas, {
+      type: 'doughnut',
+      data: donutData,
+      options: donutOptions
+    })
+
+
+  </script>
+
+  <script>
+    var ocdonutChartCanvas = $('#ocdonutChart').get(0).getContext('2d')
+    var donutData = {
+      labels: [
+        'Open',
+        'Closed',
+      ],
+      datasets: [
+        {
+          data: [5, 10],
+          backgroundColor: ['#C7D0E0', '#4A7AB2'],
+        }
+      ]
+    }
+    var donutOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    var donutChart = new Chart(ocdonutChartCanvas, {
+      type: 'doughnut',
+      data: donutData,
+      options: donutOptions
+    })
+
+  </script>
+  <script>
+
+    var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d');
+    var stackedBarChartData = {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept',
+        'Oct', 'Nov', 'Dec'
+      ],
+      datasets: [
+        {
+          label: 'Sale',
+          backgroundColor: 'rgba(60,141,188,0.9)',
+          borderColor: 'rgba(60,141,188,0.8)',
+          pointRadius: false,
+          pointColor: '#3b8bba',
+          pointStrokeColor: 'rgba(60,141,188,1)',
+          pointHighlightFill: '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data: [28, 48, 40, 19, 86, 27, 90, 10, 20, 5]
+        },
+        {
+          label: 'Payment',
+          backgroundColor: 'rgba(210, 214, 222, 1)',
+          borderColor: 'rgba(210, 214, 222, 1)',
+          pointRadius: false,
+          pointColor: 'rgba(210, 214, 222, 1)',
+          pointStrokeColor: '#c1c7d1',
+          pointHighlightFill: '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data: [65, 59, 80, 81, 56, 55, 40, 10, 11, 5]
+        },
+        {
+          label: 'Reciept',
+          backgroundColor: 'rgb(255, 193, 7)',
+          borderColor: 'rgba(210, 214, 222, 1)',
+          pointRadius: false,
+          pointColor: 'rgba(210, 214, 222, 1)',
+          pointStrokeColor: '#c1c7d1',
+          pointHighlightFill: '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data: [65, 59, 80, 81, 56, 55, 40, 10, 20, 10]
+        },
+        {
+          label: 'Guest',
+          backgroundColor: 'rgb(220, 53, 69)',
+          borderColor: 'rgba(210, 214, 222, 1)',
+          pointRadius: false,
+          pointColor: 'rgba(210, 214, 222, 1)',
+          pointStrokeColor: '#c1c7d1',
+          pointHighlightFill: '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data: [65, 59, 80, 81, 56, 55, 40, 10, 11, 5]
+        }
+      ],
+    }
+    var stackedBarChartOptions = {
+
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        xAxes: [{
+          stacked: true,
+        }],
+        yAxes: [{
+          stacked: true
+        }]
+      }
+    }
+
+    var stackedBarChart = new Chart(stackedBarChartCanvas, {
+      type: 'bar',
+      data: stackedBarChartData,
+      options: stackedBarChartOptions
+    })
+
+  </script>
+
+</body>
+
+</html>
