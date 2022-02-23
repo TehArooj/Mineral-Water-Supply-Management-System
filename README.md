@@ -10,7 +10,9 @@ Provide customers  with order placing services and delivers to the customers who
 •	View reports (Customer Profile, Customer List, Order & Delivery Detail and Lists by Status)
 •	Schedule Order and Assign for Delivery
 
-# CUSTOMER/ CONSUMER	Place order so he/she can avail the service of Mineral Water Supply.	•	Sign up and register 
+# CUSTOMER/ CONSUMER	
+Place order so he/she can avail the service of Mineral Water Supply.	
+•	Sign up and register 
 •	Place Order
 •	Cancel Order
 •	My Profile rights
